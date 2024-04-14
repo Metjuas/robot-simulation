@@ -2,18 +2,23 @@
 #include <QDebug>
 #include <QDir>
 #include "Sprite.hpp"
+#include "Robot.hpp"
 
 
 PageSim::PageSim(QWidget *parent) : QWidget(parent) {
 
-    Sprite *sprite = new Sprite(":assets/RobotAlly.png", this, 100, 100);
+    
+    Robot *robot = new Robot(0, 0);
+    robot->spawn(this);
 
     const int TickRate = 10;  //make this a cosntant
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [=]() {
-        sprite->move(sprite->x() + 1, sprite->y());
+        robot->move();
+        robot->rotate();
     });
+    
     timer->start(TickRate);
 
     QPushButton *button = new QPushButton("Pause simulation", this);

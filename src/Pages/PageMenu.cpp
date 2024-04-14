@@ -1,10 +1,14 @@
 
 #include "PageMenu.hpp"
-
-
+#include "MainWindow.hpp"
+#include <QDebug>
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
 
     // start simulation button
+    parent->resize(200, 190);
+
+
+
     QPushButton *button = new QPushButton("Start simulation", this);
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  
 
