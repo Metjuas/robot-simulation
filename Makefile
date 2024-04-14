@@ -7,7 +7,7 @@ build:
 
 all: build doxygen
 
-run: build
+run: clean build 
 	./robots
 
 clean:

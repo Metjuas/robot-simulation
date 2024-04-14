@@ -1,14 +1,12 @@
 #pragma once
 
 #include <QLabel>
-#include <QPixmap>
+#include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <QDir>
 
-class Sprite : public QLabel {
-    Q_OBJECT
-
+class Sprite : public QGraphicsPixmapItem {
 public:
     //filepath, parent, position x, position y
-    explicit Sprite(const QString &filePath, QWidget *parent, unsigned int posX, unsigned int posY);
+    explicit Sprite(const QString &filePath, QGraphicsItem *parent = nullptr, unsigned int posX = 0, unsigned int posY = 0);
 };

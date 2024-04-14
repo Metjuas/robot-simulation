@@ -3,48 +3,53 @@
 #include <QDir>
 #include "Sprite.hpp"
 #include "Robot.hpp"
+#include <iostream>
+#include <QPointer>
 
+PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, this) {
+    view.setRenderHint(QPainter::Antialiasing);
+    view.setFixedSize(800, 600);
 
-PageSim::PageSim(QWidget *parent) : QWidget(parent) {
+    QPointer<Robot> robot = new Robot(100, 100);
+    robot->spawn(&scene);
 
-    
-    Robot *robot = new Robot(0, 0);
-    robot->spawn(this);
-
-    const int TickRate = 10;  //make this a cosntant
+    const int TickRate = 10;
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [=]() {
-        robot->move();
-        robot->rotate();
+        if (!robot.isNull()) {
+            robot->move();
+            // robot->rotate();
+        }
     });
-    
+
     timer->start(TickRate);
 
     QPushButton *button = new QPushButton("Pause simulation", this);
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    // toggle the timer on button click
     connect(button, &QPushButton::clicked, [=]() {
-    if (timer->isActive()) {
-        timer->stop();
-        button->setText("Resume");
-    } else {
-        timer->start(TickRate);
-        button->setText("Pause");
-    }
+        if (timer->isActive()) {
+            timer->stop();
+            button->setText("Resume");
+        } else {
+            timer->start(TickRate);
+            button->setText("Pause");
+        }
     });
-        
-    // add the button to the layout
+
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addStretch(1);
     hLayout->addWidget(button);
     hLayout->addStretch(1);
 
-    // add the layout to the page
     QVBoxLayout *vLayout = new QVBoxLayout;
+    vLayout->addWidget(&view);  // Add the QGraphicsView to the layout
     vLayout->addStretch(1);
     vLayout->addLayout(hLayout);
 
-    this->setLayout(vLayout); 
+    this->setLayout(vLayout);
+}
+
+PageSim::~PageSim() {
 }

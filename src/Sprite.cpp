@@ -3,16 +3,15 @@
 #include <QDebug>
 #include <QDir>
 
-Sprite::Sprite(const QString &filePath, QWidget *parent, unsigned int posX, unsigned int posY) : QLabel(parent)
-{
+Sprite::Sprite(const QString &filePath, QGraphicsItem *parent, unsigned int posX, unsigned int posY)
+    : QGraphicsPixmapItem(parent) {
     QPixmap pixmap(filePath);
     if(pixmap.isNull()) {
         // debug prints
         qDebug() << "Current directory:" << QDir::currentPath();
         qDebug() << "Image path:" << QDir::currentPath() + filePath;
     } else {
-        this->setPixmap(pixmap);
-        this->setGeometry(posX, posY, pixmap.width(), pixmap.height());
-        this->show();
+        setPixmap(pixmap);
+        setPos(posX, posY);
     }
 }
