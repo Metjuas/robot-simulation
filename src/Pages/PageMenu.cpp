@@ -24,6 +24,7 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
 
     //button events
     connect(create_button, &QPushButton::clicked, [=]() {
+        
         stackedWidget->setCurrentIndex(2);
     });
 
@@ -32,6 +33,7 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
     });
 
     connect(start_button, &QPushButton::clicked, [=]() {
+        parent->resize(800,400);
         stackedWidget->setCurrentIndex(1);
     });
 }
