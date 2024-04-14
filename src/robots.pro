@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++20 debug
+CONFIG += c++17 debug
 
 SOURCES += $$files(*.cpp, true)
 
