@@ -1,9 +1,13 @@
-#include <QApplication>
-#include <QLabel>
+
+#include "MainWindow.hpp"
+
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    QLabel label("Hello, world!");
-    label.show();
+
+    MainWindow mainWindow;
+    mainWindow.show();
+    
+    
     return app.exec();
 }
