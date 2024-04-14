@@ -11,11 +11,11 @@ run: build
 	./robots
 
 clean:
-	rm -rf build doc xolexa03-xsajkoXX.zip build-* robots
+	rm -rf build doc xolexa03-xsajko01.zip build-* robots
 
 doxygen:
 	doxygen Doxyfile
 
 pack: clean
 	mkdir -p doc
-	zip -rX9 xolexa03-xsajkoXX.zip Makefile Doxyfile README.* src examples doc
+	zip -rX9 xolexa03-xsajko01.zip Makefile Doxyfile README.* src examples doc
