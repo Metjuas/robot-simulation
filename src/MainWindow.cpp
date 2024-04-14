@@ -3,14 +3,18 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Main window");
-    resize(800, 400);
+    
 
     QStackedWidget *stackedWidget = new QStackedWidget(this);
     PageMenu *pageMenu = new PageMenu(stackedWidget, this);
-    PageSim *pageSim = new PageSim(nullptr);
+    PageCreate *pageCreate = new PageCreate(stackedWidget, this);
+    PageSim *pageSim = new PageSim(this);
 
     stackedWidget->addWidget(pageMenu);
     stackedWidget->addWidget(pageSim);
+    stackedWidget->addWidget(pageCreate);
 
     setCentralWidget(stackedWidget);
+
+    resize(300, 500);
 }

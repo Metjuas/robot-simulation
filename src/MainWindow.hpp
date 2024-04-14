@@ -9,6 +9,7 @@
 
 #include "./Pages/PageMenu.hpp"
 #include "./Pages/PageSim.hpp"
+#include "./Pages/PageCreate.hpp"
 
 
 class MainWindow : public QMainWindow {

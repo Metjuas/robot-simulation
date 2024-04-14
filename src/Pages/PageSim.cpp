@@ -7,8 +7,8 @@
 #include <QPointer>
 
 PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, this) {
+
     view.setRenderHint(QPainter::Antialiasing);
-    view.setFixedSize(800, 600);
 
     QPointer<Robot> robot = new Robot(100, 100);
     robot->spawn(&scene);
@@ -38,15 +38,12 @@ PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, this) {
         }
     });
 
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addStretch(1);
-    hLayout->addWidget(button);
-    hLayout->addStretch(1);
+    QGridLayout *gridLayout = new QGridLayout();
+    gridLayout->addWidget(button, 0, 0);
 
-    QVBoxLayout *vLayout = new QVBoxLayout;
-    vLayout->addWidget(&view);  // Add the QGraphicsView to the layout
-    vLayout->addStretch(1);
-    vLayout->addLayout(hLayout);
+    QVBoxLayout *vLayout = new QVBoxLayout();
+    vLayout->addWidget(&view);
+    vLayout->addLayout(gridLayout);
 
     this->setLayout(vLayout);
 }
