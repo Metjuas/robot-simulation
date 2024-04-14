@@ -16,10 +16,16 @@ PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, this) {
     const int TickRate = 10;
 
     QTimer *timer = new QTimer(this);
+    
     connect(timer, &QTimer::timeout, [=]() {
+        static int counter = 0;
+        counter++;
         if (!robot.isNull()) {
+            if(counter % 5 == 0){
+                robot->rotate();
+            }
             robot->move();
-            // robot->rotate();
+
         }
     });
 
