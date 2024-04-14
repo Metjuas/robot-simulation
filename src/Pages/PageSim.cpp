@@ -1,17 +1,18 @@
 #include "PageSim.hpp"
+#include <QDebug>
+#include <QDir>
+#include "Sprite.hpp"
+
 
 PageSim::PageSim(QWidget *parent) : QWidget(parent) {
 
-    QLabel *circle = new QLabel(this);
-    circle->setGeometry(100, 100, 50, 50);
-    circle->setStyleSheet("background-color: red; border-radius: 25px;");
-    circle->show();
+    Sprite *sprite = new Sprite(":assets/RobotAlly.png", this, 100, 100);
 
     const int TickRate = 10;  //make this a cosntant
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, [=]() {
-        circle->move(circle->x() + 1, circle->y());
+        sprite->move(sprite->x() + 1, sprite->y());
     });
     timer->start(TickRate);
 

@@ -10,7 +10,7 @@ HEADERS += $$files(*.hpp, true)
 
 EXCLUDE += build
 
-# RESOURCES = assets.qrc
+RESOURCES = assets.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
