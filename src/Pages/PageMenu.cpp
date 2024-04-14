@@ -4,28 +4,34 @@
 #include <QDebug>
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
 
-    // start simulation button
-    parent->resize(200, 190);
+    parent->resize(300, 500);
 
+    //create widgets
+    QPushButton *create_button = new QPushButton("create map", this);
+    QPushButton *select_button = new QPushButton("select map from file", this);
+    QPushButton *start_button = new QPushButton("START", this);
+    start_button->setFixedHeight(50);
 
+    //add widgets and set layouts    
+    QGridLayout *mainLayout = new QGridLayout();
+    QVBoxLayout *groupLayout = new QVBoxLayout();
+    groupLayout->addWidget(create_button);
+    groupLayout->addWidget(select_button);
+    mainLayout->addLayout(groupLayout, 0, 0,  Qt::AlignBottom);
+    mainLayout->addWidget(start_button, 1, 0,  Qt::AlignBottom);
 
-    QPushButton *button = new QPushButton("Start simulation", this);
-    button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  
+    this->setLayout(mainLayout);
 
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addStretch(1);
-    hLayout->addWidget(button);
-    hLayout->addStretch(1);
+    //button events
+    connect(create_button, &QPushButton::clicked, [=]() {
+        stackedWidget->setCurrentIndex(2);
+    });
 
-    QVBoxLayout *vLayout = new QVBoxLayout;
-    vLayout->addStretch(1);
-    vLayout->addLayout(hLayout);
+    connect(select_button, &QPushButton::clicked, [=]() {
+        stackedWidget->setCurrentIndex(3);
+    });
 
-    this->setLayout(vLayout);
-
-
-    connect(button, &QPushButton::clicked, [=]() {
-        int simPageIndex = 1; 
-        stackedWidget->setCurrentIndex(simPageIndex);
+    connect(start_button, &QPushButton::clicked, [=]() {
+        stackedWidget->setCurrentIndex(1);
     });
 }
