@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     
 
     QStackedWidget *stackedWidget = new QStackedWidget(this);
-    PageMenu *pageMenu = new PageMenu(stackedWidget, this);
-    PageCreate *pageCreate = new PageCreate(stackedWidget, this);
-    PageSim *pageSim = new PageSim(this);
+    pageMenu = new PageMenu(stackedWidget, this);
+    pageCreate = new PageCreate(stackedWidget, this);
+    pageSim = new PageSim(this);
 
     stackedWidget->addWidget(pageMenu);
     stackedWidget->addWidget(pageSim);
@@ -17,4 +17,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setCentralWidget(stackedWidget);
 
     resize(300, 500);
+}
+#include <iostream>
+
+MainWindow::~MainWindow() {
+    if(pageMenu != nullptr){
+        delete pageMenu;
+    }
+    if(pageCreate != nullptr){
+        delete pageCreate;
+    }
+    if(pageSim != nullptr){
+        delete pageSim;
+    }
 }

@@ -16,6 +16,11 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+private:
+    PageMenu *pageMenu = nullptr;
+    PageCreate *pageCreate = nullptr;
+    PageSim *pageSim = nullptr;
 
 };
 
