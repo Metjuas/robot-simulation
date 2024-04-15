@@ -14,14 +14,17 @@
 #include <QtWidgets>
 
 
+#include "Controller.hpp"
+
 class PageCreate : public QWidget
 {
     Q_OBJECT;
     public:
-        PageCreate(QStackedWidget *stackedWidget, QWidget *parent = nullptr);
-        ~PageCreate() = default;
+        PageCreate(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
+        ~PageCreate();
     protected:
         void showEvent(QShowEvent *event) override;
     private:
         QStackedWidget *m_stackedWidget;
+        Controller *controller;
 };

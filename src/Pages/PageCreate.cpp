@@ -2,12 +2,17 @@
 #include "PageCreate.hpp"
 #include "MainWindow.hpp"
 
-PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent), m_stackedWidget(stackedWidget) {
+
+PageCreate::~PageCreate() {
+}
+
+
+PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), m_stackedWidget(stackedWidget) {
 
     parent->resize(300, 500);
     //i want a popup window that says "set the size of the map"
 
-
+    this->controller = controller;
 
     //create widgets
     QLabel *Box_image = new QLabel("Box", this);
@@ -82,9 +87,9 @@ void PageCreate::showEvent(QShowEvent *event) {
 
         // if the user accepts the dialog, it goes to the next page
         if (dialog.exec() == QDialog::Accepted) {
-            int height = spinBox1->value();
-            int width = spinBox2->value();
-            this->resize(width, height);
+            controller->map_height = spinBox1->value();
+            controller->map_width = spinBox2->value();
+            resize( controller->map_width, controller->map_height);
         }    
         // in case the user cancels the dialog, it goes back to the main page
         else {

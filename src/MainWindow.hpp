@@ -11,6 +11,7 @@
 #include "./Pages/PageSim.hpp"
 #include "./Pages/PageCreate.hpp"
 
+#include "Controller.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,6 +22,7 @@ private:
     PageMenu *pageMenu = nullptr;
     PageCreate *pageCreate = nullptr;
     PageSim *pageSim = nullptr;
+    Controller *controller;
 
 };
 

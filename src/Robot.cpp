@@ -32,5 +32,6 @@ void Robot::rotate() {
 }
 
 bool Robot::detectCollision(QGraphicsScene* scene) {
-    
+    scene = scene;
+    return false;
 }
