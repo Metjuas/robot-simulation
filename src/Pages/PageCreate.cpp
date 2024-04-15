@@ -7,10 +7,10 @@ PageCreate::~PageCreate() {
 }
 
 
-PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), m_stackedWidget(stackedWidget) {
-
-    parent->resize(300, 500);
-    //i want a popup window that says "set the size of the map"
+PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
+ : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller), view(&scene, nullptr) {
+    // parent->resize(300, 500);
+    view.setRenderHint(QPainter::Antialiasing);
 
     this->controller = controller;
 
@@ -51,8 +51,9 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     QGridLayout *mainLayout = new QGridLayout();
     mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
     mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-
+    mainLayout->addWidget(&view, 0, 0, 1, 1);
     this->setLayout(mainLayout);
+
 
     connect(ok_button, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1);
@@ -70,12 +71,12 @@ void PageCreate::showEvent(QShowEvent *event) {
         //dialog windows
         QSpinBox *spinBox1 = new QSpinBox(&dialog);
         spinBox1->setRange(0, 1000);
-        spinBox1->setValue(800);
+        spinBox1->setValue(600);
         form.addRow("Height:", spinBox1);
 
         QSpinBox *spinBox2 = new QSpinBox(&dialog);
         spinBox2->setRange(0, 1000);
-        spinBox2->setValue(400);
+        spinBox2->setValue(600);
         form.addRow("Width:", spinBox2);
 
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
@@ -89,7 +90,8 @@ void PageCreate::showEvent(QShowEvent *event) {
         if (dialog.exec() == QDialog::Accepted) {
             controller->map_height = spinBox1->value();
             controller->map_width = spinBox2->value();
-            resize( controller->map_width, controller->map_height);
+            view.setFixedSize(controller->map_width, controller->map_height);
+            // resize( controller->map_width, controller->map_height);
         }    
         // in case the user cancels the dialog, it goes back to the main page
         else {

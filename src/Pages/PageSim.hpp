@@ -14,6 +14,10 @@ class PageSim : public QWidget
     public:
     PageSim(QWidget *parent = nullptr);
     ~PageSim();
+  
+    private:
+    QTimer *timer;
     QGraphicsScene scene;
     QGraphicsView view;
+
 };
