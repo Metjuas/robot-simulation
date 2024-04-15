@@ -13,7 +13,7 @@ PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, this) {
     QPointer<Robot> robot = new Robot(100, 100);
     robot->spawn(&scene);
 
-    const int TickRate = 10;
+    const int TickRate = 2;
 
     QTimer *timer = new QTimer(this);
     

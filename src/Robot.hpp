@@ -10,6 +10,7 @@ class Robot: public QObject{
         void spawn(QGraphicsScene* scene);
         void move();
         void rotate();
+        bool detectCollision(QGraphicsScene* scene);
 
     private:
         int posX;

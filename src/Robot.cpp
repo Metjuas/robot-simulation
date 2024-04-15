@@ -14,8 +14,8 @@ void Robot::spawn(QGraphicsScene* scene) {
 
 void Robot::move() {
     if (sprite) { 
-        // our sprite is by default rotated by 90
-        double rotation = (sprite->rotation()) * M_PI / 180.0;
+      
+        double rotation = sprite->rotation() * M_PI / 180.0;
 
         double newX = sprite->x() + cos(rotation);
         double newY = sprite->y() + sin(rotation);
@@ -25,9 +25,12 @@ void Robot::move() {
 }
 
 void Robot::rotate() {
-    if (sprite) { // Check if sprite is not nullptr
+    if (sprite) { 
         //rotate my sprite
-        sprite->setRotation(sprite->rotation() + 1);
+        sprite->setRotation(sprite->rotation() + 3);
     }
 }
 
+bool Robot::detectCollision(QGraphicsScene* scene) {
+    
+}
