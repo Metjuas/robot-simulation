@@ -10,22 +10,46 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent) : QWidget
 
 
     //create widgets
-    QPushButton *start_button = new QPushButton("create map", this);
-    start_button->setFixedHeight(50);
-
+    QLabel *Box_image = new QLabel("Box", this);
+    QLabel *Robot_image = new QLabel("Robot", this);
+    QLabel *Trash_image = new QLabel("Remove", this);
+    QLineEdit *Map_name = new QLineEdit;
+    QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
-    save_button->setFixedHeight(50);
+
+    QLineEdit *Robot_name = new QLineEdit;
+    QDoubleSpinBox *direction_num = new QDoubleSpinBox();
+    direction_num->setPrefix("Direction:");
+    QDoubleSpinBox *distance_num = new QDoubleSpinBox();
+    direction_num->setPrefix("Distance:");
+    QComboBox *direction_type = new QComboBox();
+    direction_type->addItem("left");
+    direction_type->addItem("right");
+
 
     //add widgets and set layouts    
+    QHBoxLayout *toolBarLayout = new QHBoxLayout();
+    toolBarLayout->addWidget(Box_image);
+    toolBarLayout->addWidget(Robot_image);
+    toolBarLayout->addWidget(Trash_image);
+    toolBarLayout->addWidget(Map_name);
+    toolBarLayout->addWidget(ok_button);
+    toolBarLayout->addWidget(save_button);
 
-    
+    QVBoxLayout *dataSetLayout = new QVBoxLayout();
+    dataSetLayout->addWidget(Robot_name);
+    dataSetLayout->addWidget(direction_num);
+    dataSetLayout->addWidget(distance_num);
+    dataSetLayout->addWidget(direction_type);
+
+
     QGridLayout *mainLayout = new QGridLayout();
-    mainLayout->addWidget(start_button, 1, 0,  Qt::AlignBottom);
-    mainLayout->addWidget(save_button, 1, 1,  Qt::AlignBottom);
+    mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
+    mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
 
     this->setLayout(mainLayout);
 
-    connect(start_button, &QPushButton::clicked, [=]() {
+    connect(ok_button, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1);
     });
 }
@@ -40,13 +64,13 @@ void PageCreate::showEvent(QShowEvent *event) {
         
         //dialog windows
         QSpinBox *spinBox1 = new QSpinBox(&dialog);
-        spinBox1->setRange(0, 100);
-        spinBox1->setValue(25);
+        spinBox1->setRange(0, 1000);
+        spinBox1->setValue(800);
         form.addRow("Height:", spinBox1);
 
         QSpinBox *spinBox2 = new QSpinBox(&dialog);
-        spinBox2->setRange(0, 100);
-        spinBox2->setValue(25);
+        spinBox2->setRange(0, 1000);
+        spinBox2->setValue(400);
         form.addRow("Width:", spinBox2);
 
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
@@ -60,6 +84,7 @@ void PageCreate::showEvent(QShowEvent *event) {
         if (dialog.exec() == QDialog::Accepted) {
             int height = spinBox1->value();
             int width = spinBox2->value();
+            this->resize(width, height);
         }    
         // in case the user cancels the dialog, it goes back to the main page
         else {

@@ -11,7 +11,7 @@
 #include <QSpinBox>
 #include <QFormLayout>
 #include <QDialogButtonBox>
-
+#include <QtWidgets>
 
 
 class PageCreate : public QWidget
