@@ -8,18 +8,22 @@ Robot::Robot(int posX, int posY) {
 
 Robot::~Robot() {
     //if the sprite exists, delete it
-    std::cerr << "Robot destructor start" << std::endl;
 
     if (sprite != nullptr) {
         delete sprite;
     }
-    std::cerr << "Robot destructor end" << std::endl;
 }  
 
 
 
 void Robot::spawn(QGraphicsScene* scene) {
-    sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX, this->posY);
+    
+    QImage image(":assets/RobotAlly.png");
+    int width = image.width();
+    int height = image.height();
+
+    sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX-(width/2), this->posY-(height/2));
+    
     scene->addItem(sprite);
 }
 

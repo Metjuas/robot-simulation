@@ -4,7 +4,6 @@
 Sprite::~Sprite(){
     //if the sprite exists, delete it
 
-    std::cerr << "Robot destructor" << std::endl;
 
 }
 

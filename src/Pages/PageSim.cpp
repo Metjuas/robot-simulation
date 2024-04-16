@@ -46,11 +46,9 @@ PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
 }
 
 PageSim::~PageSim() {
-    std::cerr << "PageSim destructor start\n";
     if(timer){
         timer->stop();
         delete timer;
         timer = nullptr;
     }   
-    std::cerr << "PageSim destructor end\n";
 }

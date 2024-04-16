@@ -13,7 +13,8 @@ class Controller {
         int map_height;
         int map_width;
         QGraphicsScene scene;
-        void AddRobot(int x, int y);
+        void addRobot(int x, int y);
+        void spawnTopmostRobot();
 
     private:
         std::vector<Robot*> robots;

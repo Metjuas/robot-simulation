@@ -10,9 +10,7 @@ class Map
 {
 public:
     Map(Controller* controller, QWidget *parent = nullptr);
-    ~Map(){
-        std::cerr << "Map destructor" << std::endl;
-    };
+    
 private:
     QWidget *m_parent;
     Controller* m_controller;

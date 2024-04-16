@@ -22,12 +22,13 @@ public:
 
     std::pair<int, int> getLastClickPosition() const { return lastClickPosition; }
     
-
+signals:
+    void mouseClick(int x, int y);
 protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
     Mode mode;
-    std::pair<int, int> lastClickPosition;
+    std::pair<int,int> lastClickPosition;
 
 };

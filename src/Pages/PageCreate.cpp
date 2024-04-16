@@ -4,9 +4,7 @@
 #include <QMouseEvent>
 
 PageCreate:: ~PageCreate() {
-    std::cerr << "PageCreate destructor start" << std::endl;
     delete view;
-    std::cerr << "PageCreate destructor end" << std::endl;
 
 }
 
@@ -72,20 +70,23 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     //clicking event
     connect(Robot_button, &QPushButton::clicked, this, &PageCreate::startRecordingClicks);
+    
+    connect(view, &CustomGraphicsView::mouseClick, this, &PageCreate::handleMouseClick);
 
     connect(ok_button, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1);
     });
 }
 
+void PageCreate::handleMouseClick(int x, int y){
+    std::cout << "Mouse click at: " << x << ", " << y << std::endl;
+    controller->addRobot(x, y);
+    controller->spawnTopmostRobot();
+}
 
 void PageCreate::startRecordingClicks()
 {
     view->setMode(CustomGraphicsView::RecordClicks);
-
-
-    controller->AddRobot(view->getLastClickPosition().first, view->getLastClickPosition().second);
-    std::cout << "Added robot at: " << view->getLastClickPosition().first << " " << view->getLastClickPosition().second << std::endl;
 }
 
 
@@ -117,15 +118,11 @@ void PageCreate::showEvent(QShowEvent *event) {
         // if the user accepts the dialog, it goes to the next page
         if (dialog.exec() == QDialog::Accepted) {
             if(controller){
-                std::cerr << "im in\n";
                 controller->map_height = spinBox1->value();
                 controller->map_width = spinBox2->value();
                 if(view){
                     view->setFixedSize(controller->map_width, controller->map_height);
                 }
-            }
-            else{
-                std::cerr << "Controller is null" << std::endl;
             }
             // resize( controller->map_width, controller->map_height);
         }    
