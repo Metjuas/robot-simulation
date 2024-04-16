@@ -2,6 +2,7 @@
 #include "PageCreate.hpp"
 
 PageCreate:: ~PageCreate() {
+    delete map;
 }
 
 
@@ -53,11 +54,10 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     this->setLayout(mainLayout);
 
     //tmp robot spawning
-    Robot* robot = new Robot(100, 100);
-    robot->spawn(&controller->scene);
+    controller->spawnRobots();
 
     //creating map 
-    Map map(controller, this);
+    map = new Map(controller, this);
 
 
     connect(ok_button, &QPushButton::clicked, [=]() {

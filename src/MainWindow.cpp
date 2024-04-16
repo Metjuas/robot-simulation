@@ -1,20 +1,18 @@
 
 #include "MainWindow.hpp"
 
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Main window");
-    controller = new Controller();
+    controller = std::make_unique<Controller>();
 
     QStackedWidget *stackedWidget = new QStackedWidget(this);
-    pageMenu = new PageMenu(stackedWidget, this);
-    pageCreate = new PageCreate(stackedWidget, this, controller);
-    pageSim = new PageSim(this, controller);
+    pageMenu = std::make_unique<PageMenu>(stackedWidget, this);
+    pageCreate = std::make_unique<PageCreate>(stackedWidget, this, controller.get());
+    pageSim = std::make_unique<PageSim>(this, controller.get());
 
-    stackedWidget->addWidget(pageMenu);
-    stackedWidget->addWidget(pageSim);
-    stackedWidget->addWidget(pageCreate);
-
+    stackedWidget->addWidget(pageMenu.get());
+    stackedWidget->addWidget(pageSim.get());
+    stackedWidget->addWidget(pageCreate.get());
     setCentralWidget(stackedWidget);
 
     resize(300, 500);
@@ -22,14 +20,5 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 #include <iostream>
 
 MainWindow::~MainWindow() {
-    if(pageMenu != nullptr){
-        delete pageMenu;
-    }
-    if(pageSim != nullptr){
-        delete pageSim;
-    }
-    if(pageCreate != nullptr){
-        delete pageCreate;
-    }
-    delete controller;
+
 }

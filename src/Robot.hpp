@@ -9,6 +9,7 @@ class Robot: public QObject{
     Q_OBJECT;
     public:
         Robot(int posX, int posY);
+        ~Robot();
         void spawn(QGraphicsScene* scene);
         void move();
         void rotate();

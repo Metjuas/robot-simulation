@@ -4,6 +4,9 @@
 
 #define block_size_ratio 10
 
+// constructor for the Map class, paints the background of the scene with a texture
+
+
 Map::Map(Controller* controller, QWidget *parent) : m_parent(parent), m_controller(controller) {
     QPixmap texture(":/assets/Iron.png");
     if (texture.isNull()) {

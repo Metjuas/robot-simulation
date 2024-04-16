@@ -34,4 +34,5 @@ class PageCreate : public QWidget
         QStackedWidget *m_stackedWidget;
         Controller *controller;
         QGraphicsView view;
+        Map* map;
 };

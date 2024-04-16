@@ -7,13 +7,14 @@
 
 class Controller {
     public:
-        Controller(){}; // Default constructor
-        ~Controller(){}; // Default destructor
+        Controller(); // Default constructor
+        ~Controller(); // Default destructor
+        void spawnRobots();
         int map_height;
         int map_width;
         QGraphicsScene scene;
 
     private:
-        std::vector<Robot> robots;
+        std::vector<Robot*> robots;
 };
 

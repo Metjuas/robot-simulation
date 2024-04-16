@@ -6,6 +6,10 @@ Robot::Robot(int posX, int posY) {
     this->posY = posY;
 }
 
+Robot::~Robot() {
+    delete sprite;
+}  
+
 void Robot::spawn(QGraphicsScene* scene) {
     sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX, this->posY);
     scene->addItem(sprite);

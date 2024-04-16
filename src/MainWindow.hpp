@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QObject> 
 #include <QStackedWidget>
+#include <memory>
 
 #include "./Pages/PageCreate.hpp"
 
@@ -21,10 +22,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private:
-    PageMenu *pageMenu = nullptr;
-    PageCreate *pageCreate = nullptr;
-    PageSim *pageSim = nullptr;
-    Controller *controller;
+    std::unique_ptr<PageMenu> pageMenu = nullptr;
+    std::unique_ptr<PageCreate> pageCreate = nullptr;
+    std::unique_ptr<PageSim> pageSim = nullptr;
+    std::unique_ptr<Controller> controller;
 
 };
 
