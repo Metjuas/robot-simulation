@@ -17,53 +17,53 @@ PageCreate:: ~PageCreate() {
 PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
  : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
     // parent->resize(300, 500);
-    this->controller = controller;
+    // this->controller = controller;
     
-    // if(controller){
-    //     view = new QGraphicsView(&controller->scene, this);
-    //     view->setRenderHint(QPainter::Antialiasing);
-    // }
+    // // if(controller){
+    // //     view = new QGraphicsView(&controller->scene, this);
+    // //     view->setRenderHint(QPainter::Antialiasing);
+    // // }
 
-    //create widgets
-    QLabel *Box_image = new QLabel("Box", this);
-    QLabel *Robot_image = new QLabel("Robot", this);
-    QLabel *Trash_image = new QLabel("Remove", this);
-    QLineEdit *Map_name = new QLineEdit;
-    QPushButton *ok_button = new QPushButton("Ok", this);
-    QPushButton *save_button = new QPushButton("Save", this);
+    // //create widgets
+    // QLabel *Box_image = new QLabel("Box", this);
+    // QLabel *Robot_image = new QLabel("Robot", this);
+    // QLabel *Trash_image = new QLabel("Remove", this);
+    // QLineEdit *Map_name = new QLineEdit;
+    // QPushButton *ok_button = new QPushButton("Ok", this);
+    // QPushButton *save_button = new QPushButton("Save", this);
 
-    QLineEdit *Robot_name = new QLineEdit;
-    QDoubleSpinBox *direction_num = new QDoubleSpinBox();
-    direction_num->setPrefix("Direction:");
-    QDoubleSpinBox *distance_num = new QDoubleSpinBox();
-    direction_num->setPrefix("Distance:");
-    QComboBox *direction_type = new QComboBox();
-    direction_type->addItem("left");
-    direction_type->addItem("right");
-
-
-    //add widgets and set layouts    
-    QHBoxLayout *toolBarLayout = new QHBoxLayout();
-    toolBarLayout->addWidget(Box_image);
-    toolBarLayout->addWidget(Robot_image);
-    toolBarLayout->addWidget(Trash_image);
-    toolBarLayout->addWidget(Map_name);
-    toolBarLayout->addWidget(ok_button);
-    toolBarLayout->addWidget(save_button);
-
-    QVBoxLayout *dataSetLayout = new QVBoxLayout();
-    dataSetLayout->addWidget(Robot_name);
-    dataSetLayout->addWidget(direction_num);
-    dataSetLayout->addWidget(distance_num);
-    dataSetLayout->addWidget(direction_type);
+    // QLineEdit *Robot_name = new QLineEdit;
+    // QDoubleSpinBox *direction_num = new QDoubleSpinBox();
+    // direction_num->setPrefix("Direction:");
+    // QDoubleSpinBox *distance_num = new QDoubleSpinBox();
+    // direction_num->setPrefix("Distance:");
+    // QComboBox *direction_type = new QComboBox();
+    // direction_type->addItem("left");
+    // direction_type->addItem("right");
 
 
-    QGridLayout *mainLayout = new QGridLayout();
-    mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
-    mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-    // mainLayout->addWidget(view, 0, 0, 1, 1);
+    // //add widgets and set layouts    
+    // QHBoxLayout *toolBarLayout = new QHBoxLayout();
+    // toolBarLayout->addWidget(Box_image);
+    // toolBarLayout->addWidget(Robot_image);
+    // toolBarLayout->addWidget(Trash_image);
+    // toolBarLayout->addWidget(Map_name);
+    // toolBarLayout->addWidget(ok_button);
+    // toolBarLayout->addWidget(save_button);
 
-    this->setLayout(mainLayout);
+    // QVBoxLayout *dataSetLayout = new QVBoxLayout();
+    // dataSetLayout->addWidget(Robot_name);
+    // dataSetLayout->addWidget(direction_num);
+    // dataSetLayout->addWidget(distance_num);
+    // dataSetLayout->addWidget(direction_type);
+
+
+    // QGridLayout *mainLayout = new QGridLayout();
+    // mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
+    // mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
+    // // mainLayout->addWidget(view, 0, 0, 1, 1);
+
+    // this->setLayout(mainLayout);
 
     //tmp robot spawning
 
@@ -73,9 +73,9 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     // map = std::make_unique<Map>(controller, this);
 
 
-    connect(ok_button, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(1);
-    });
+    // connect(ok_button, &QPushButton::clicked, [=]() {
+    //     stackedWidget->setCurrentIndex(1);
+    // });
 }
 
 

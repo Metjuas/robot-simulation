@@ -11,8 +11,8 @@
 #include "Controller.hpp"
 #include <QDebug>
 #include <QDir>
-#include "Sprite.hpp"
-#include "Robot.hpp"
+// #include "Sprite.hpp"
+// #include "Robot.hpp"
 #include <iostream>
 #include <QPointer>
 

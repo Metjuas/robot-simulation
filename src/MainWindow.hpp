@@ -7,26 +7,23 @@
 #include <QTimer>
 #include <QObject> 
 #include <QStackedWidget>
-#include <memory>
 
-#include "./Pages/PageCreate.hpp"
+// #include "./Pages/PageCreate.hpp"
 
-#include "./Pages/PageMenu.hpp"
+// #include "./Pages/PageMenu.hpp"
 // #include "./Pages/PageSim.hpp"
 
-#include "Controller.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 private:
-    PageMenu* pageMenu = nullptr;
-    PageCreate* pageCreate = nullptr;
-    
+    // PageMenu* pageMenu = nullptr;
+    // PageCreate* pageCreate = nullptr;
+
     // std::unique_ptr<PageSim> pageSim = nullptr;
-    std::unique_ptr<Controller> controller;
+    // std::unique_ptr<Controller> controller;
 
 };
 

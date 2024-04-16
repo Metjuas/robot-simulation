@@ -27,10 +27,10 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
     this->setLayout(mainLayout);
 
     //button events
-    connect(create_button, &QPushButton::clicked, [=]() {
+    // connect(create_button, &QPushButton::clicked, [=]() {
         
-        stackedWidget->setCurrentIndex(1);
-    });
+    //     stackedWidget->setCurrentIndex(1);
+    // });
 
     // connect(select_button, &QPushButton::clicked, [=]() {
     //     stackedWidget->setCurrentIndex(3);
