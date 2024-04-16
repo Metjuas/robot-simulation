@@ -12,7 +12,7 @@
 #include "./Pages/PageCreate.hpp"
 
 #include "./Pages/PageMenu.hpp"
-#include "./Pages/PageSim.hpp"
+// #include "./Pages/PageSim.hpp"
 
 #include "Controller.hpp"
 
@@ -22,9 +22,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private:
-    std::unique_ptr<PageMenu> pageMenu = nullptr;
-    std::unique_ptr<PageCreate> pageCreate = nullptr;
-    std::unique_ptr<PageSim> pageSim = nullptr;
+    PageMenu* pageMenu = nullptr;
+    PageCreate* pageCreate = nullptr;
+    
+    // std::unique_ptr<PageSim> pageSim = nullptr;
     std::unique_ptr<Controller> controller;
 
 };

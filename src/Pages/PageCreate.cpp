@@ -4,7 +4,10 @@
 
 PageCreate:: ~PageCreate() {
     std::cerr << "PageCreate destructor start" << std::endl;
-    delete view;
+    // if(view){
+    //     delete view;
+    //     view = nullptr;
+    // }
     std::cerr << "PageCreate destructor end" << std::endl;
 
 }
@@ -15,8 +18,11 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
  : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
     // parent->resize(300, 500);
     this->controller = controller;
-    view = new QGraphicsView(&controller->scene, this);
-    view->setRenderHint(QPainter::Antialiasing);
+    
+    // if(controller){
+    //     view = new QGraphicsView(&controller->scene, this);
+    //     view->setRenderHint(QPainter::Antialiasing);
+    // }
 
     //create widgets
     QLabel *Box_image = new QLabel("Box", this);
@@ -55,7 +61,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     QGridLayout *mainLayout = new QGridLayout();
     mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
     mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-    mainLayout->addWidget(view, 0, 0, 1, 1);
+    // mainLayout->addWidget(view, 0, 0, 1, 1);
 
     this->setLayout(mainLayout);
 
@@ -64,7 +70,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     // controller->spawnRobots();
 
     //creating map 
-    map = std::make_unique<Map>(controller, this);
+    // map = std::make_unique<Map>(controller, this);
 
 
     connect(ok_button, &QPushButton::clicked, [=]() {
@@ -73,51 +79,51 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 }
 
 
-void PageCreate::showEvent(QShowEvent *event) {
-    if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
+// void PageCreate::showEvent(QShowEvent *event) {
+//     if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
         
-        QDialog dialog(this);
-        dialog.setWindowTitle("Set the size");
-        QFormLayout form(&dialog);
+//         QDialog dialog(this);
+//         dialog.setWindowTitle("Set the size");
+//         QFormLayout form(&dialog);
         
-        //dialog windows
-        QSpinBox *spinBox1 = new QSpinBox(&dialog);
-        spinBox1->setRange(0, 1000);
-        spinBox1->setValue(600);
-        form.addRow("Height:", spinBox1);
+//         //dialog windows
+//         QSpinBox *spinBox1 = new QSpinBox(&dialog);
+//         spinBox1->setRange(0, 1000);
+//         spinBox1->setValue(600);
+//         form.addRow("Height:", spinBox1);
 
-        QSpinBox *spinBox2 = new QSpinBox(&dialog);
-        spinBox2->setRange(0, 1000);
-        spinBox2->setValue(600);
-        form.addRow("Width:", spinBox2);
+//         QSpinBox *spinBox2 = new QSpinBox(&dialog);
+//         spinBox2->setRange(0, 1000);
+//         spinBox2->setValue(600);
+//         form.addRow("Width:", spinBox2);
 
-        QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
-                                   Qt::Horizontal, &dialog);
-        form.addRow(&buttonBox);
-        //button function call
-        connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-        connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+//         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+//                                    Qt::Horizontal, &dialog);
+//         form.addRow(&buttonBox);
+//         //button function call
+//         connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+//         connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
-        // if the user accepts the dialog, it goes to the next page
-        if (dialog.exec() == QDialog::Accepted) {
-            if(controller){
-                std::cerr << "im in\n";
-                controller->map_height = spinBox1->value();
-                controller->map_width = spinBox2->value();
-                if(view){
-                    view->setFixedSize(controller->map_width, controller->map_height);
-                }
-            }
-            else{
-                std::cerr << "Controller is null" << std::endl;
-            }
-            // resize( controller->map_width, controller->map_height);
-        }    
-        // in case the user cancels the dialog, it goes back to the main page
-        else {
-            m_stackedWidget->setCurrentIndex(0);
-        }
-    }
+//         // if the user accepts the dialog, it goes to the next page
+//         if (dialog.exec() == QDialog::Accepted) {
+//             if(controller){
+//                 std::cerr << "im in\n";
+//                 controller->map_height = spinBox1->value();
+//                 controller->map_width = spinBox2->value();
+//                 // if(view){
+//                 //     view->setFixedSize(controller->map_width, controller->map_height);
+//                 // }
+//             }
+//             else{
+//                 std::cerr << "Controller is null" << std::endl;
+//             }
+//             // resize( controller->map_width, controller->map_height);
+//         }    
+//         // in case the user cancels the dialog, it goes back to the main page
+//         else {
+//             m_stackedWidget->setCurrentIndex(0);
+//         }
+//     }
 
-    QWidget::showEvent(event);
-}
+//     QWidget::showEvent(event);
+// }

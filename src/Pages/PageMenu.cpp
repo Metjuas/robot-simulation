@@ -4,7 +4,6 @@
 
 PageMenu::~PageMenu(){
     std::cerr << "PageMenu destructor" << std::endl;
-
 }
 
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
@@ -30,15 +29,15 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
     //button events
     connect(create_button, &QPushButton::clicked, [=]() {
         
-        stackedWidget->setCurrentIndex(2);
-    });
-
-    connect(select_button, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(3);
-    });
-
-    connect(start_button, &QPushButton::clicked, [=]() {
-        parent->resize(800,400);
         stackedWidget->setCurrentIndex(1);
     });
+
+    // connect(select_button, &QPushButton::clicked, [=]() {
+    //     stackedWidget->setCurrentIndex(3);
+    // });
+
+    // connect(start_button, &QPushButton::clicked, [=]() {
+    //     parent->resize(800,400);
+    //     stackedWidget->setCurrentIndex(1);
+    // });
 }

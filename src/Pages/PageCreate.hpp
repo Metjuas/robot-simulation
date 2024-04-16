@@ -30,11 +30,11 @@ class PageCreate : public QWidget
     public:
         PageCreate(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
         ~PageCreate();
-    protected:
-        void showEvent(QShowEvent *event) override;
+    // protected:
+        // void showEvent(QShowEvent *event) override;
     private:
         QStackedWidget *m_stackedWidget;
         Controller *controller;
-        QGraphicsView* view;
-        std::unique_ptr<Map> map;
+        // QGraphicsView* view;
+        // std::unique_ptr<Map> map;
 };
