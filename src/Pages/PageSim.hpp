@@ -26,6 +26,6 @@ class PageSim : public QWidget
   
     private:
     QTimer *timer;
-    QGraphicsView view;
+    QGraphicsView *view;
 
 };

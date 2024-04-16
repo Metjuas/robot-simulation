@@ -1,5 +1,11 @@
 
 #include "PageMenu.hpp"
+#include <iostream>
+
+PageMenu::~PageMenu(){
+    std::cerr << "PageMenu destructor" << std::endl;
+
+}
 
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
 

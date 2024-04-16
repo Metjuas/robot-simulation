@@ -12,11 +12,13 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QtWidgets>
+#include <QPixmap>
 
+
+#include <memory>
 
 #include "Sprite.hpp"
 #include "Robot.hpp"
-#include <QPixmap>
 
 #include "Map.hpp"
 
@@ -33,6 +35,6 @@ class PageCreate : public QWidget
     private:
         QStackedWidget *m_stackedWidget;
         Controller *controller;
-        QGraphicsView view;
-        Map* map;
+        QGraphicsView* view;
+        std::unique_ptr<Map> map;
 };

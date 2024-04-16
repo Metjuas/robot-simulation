@@ -1,5 +1,12 @@
 #include "Sprite.hpp"
+#include <iostream>
 
+Sprite::~Sprite(){
+    //if the sprite exists, delete it
+
+    std::cerr << "Robot destructor" << std::endl;
+
+}
 
 Sprite::Sprite(const QString &filePath, QGraphicsItem *parent, unsigned int posX, unsigned int posY)
     : QGraphicsPixmapItem(parent) {

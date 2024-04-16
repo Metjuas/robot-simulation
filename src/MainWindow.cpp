@@ -20,5 +20,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 #include <iostream>
 
 MainWindow::~MainWindow() {
+    std::cerr << "MainWindow destructor start" << std::endl;
 
+    std::cerr << "MainWindow destructor end" << std::endl;
 }

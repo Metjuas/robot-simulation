@@ -1,5 +1,5 @@
 #include "Robot.hpp"
-
+#include <iostream>
 
 Robot::Robot(int posX, int posY) {
     this->posX = posX;
@@ -7,8 +7,16 @@ Robot::Robot(int posX, int posY) {
 }
 
 Robot::~Robot() {
-    delete sprite;
+    //if the sprite exists, delete it
+    std::cerr << "Robot destructor start" << std::endl;
+
+    if (sprite != nullptr) {
+        delete sprite;
+    }
+    std::cerr << "Robot destructor end" << std::endl;
 }  
+
+
 
 void Robot::spawn(QGraphicsScene* scene) {
     sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX, this->posY);

@@ -17,5 +17,3 @@ Map::Map(Controller* controller, QWidget *parent) : m_parent(parent), m_controll
     }
 }
 
-Map::~Map() {
-}

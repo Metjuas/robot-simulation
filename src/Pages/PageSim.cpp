@@ -1,29 +1,14 @@
 #include "PageSim.hpp"
+#include <iostream>
 
-PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent), view(&controller->scene, nullptr) {
+PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
 
-    view.setRenderHint(QPainter::Antialiasing);
-
-    
-    // Robot* robot = new Robot(100, 100);
-    // robot->spawn(&controller->scene);
-
+    // view.setRenderHint(QPainter::Antialiasing);
+    view = new QGraphicsView(&controller->scene, nullptr);
     const int TickRate = 2;
 
     timer = new QTimer(this);
     
-    // connect(timer, &QTimer::timeout, [=]() {
-    //     static int counter = 0;
-    //     counter++;
-    //     if (robot != nullptr) {
-    //         if(counter % 5 == 0){
-    //             robot->rotate();
-    //         }
-    //         robot->move();
-
-    //     }
-    // });
-
     timer->start(TickRate);
 
     QPushButton *pause_button = new QPushButton("Pause simulation", this);
@@ -54,13 +39,18 @@ PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent), vie
     gridLayout->addWidget(right_button, 1, 5);
 
     QVBoxLayout *vLayout = new QVBoxLayout();
-    vLayout->addWidget(&view);
+    vLayout->addWidget(view);
     vLayout->addLayout(gridLayout);
 
     this->setLayout(vLayout);
 }
 
 PageSim::~PageSim() {
-    timer->stop();
-    delete timer;
+    std::cerr << "PageSim destructor start\n";
+    if(timer){
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }   
+    std::cerr << "PageSim destructor end\n";
 }

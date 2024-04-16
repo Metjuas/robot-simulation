@@ -18,6 +18,6 @@ class Robot: public QObject{
     private:
         int posX;
         int posY;
-        Sprite *sprite;
+        Sprite *sprite = nullptr;
 };
             

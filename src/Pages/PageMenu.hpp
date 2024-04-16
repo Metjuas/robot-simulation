@@ -13,7 +13,7 @@ class PageMenu : public QWidget
     Q_OBJECT;
     public:
         PageMenu(QStackedWidget *stackedWidget, QWidget *parent = nullptr);
-        ~PageMenu() = default;
+        ~PageMenu();
     private:
         QStackedWidget *m_stackedWidget;
 };

@@ -1,17 +1,22 @@
 
 #include "PageCreate.hpp"
+#include <iostream>
 
 PageCreate:: ~PageCreate() {
-    delete map;
+    std::cerr << "PageCreate destructor start" << std::endl;
+    delete view;
+    std::cerr << "PageCreate destructor end" << std::endl;
+
 }
 
 
-PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
- : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller), view(&controller->scene, nullptr) {
-    // parent->resize(300, 500);
-    view.setRenderHint(QPainter::Antialiasing);
 
+PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
+ : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
+    // parent->resize(300, 500);
     this->controller = controller;
+    view = new QGraphicsView(&controller->scene, this);
+    view->setRenderHint(QPainter::Antialiasing);
 
     //create widgets
     QLabel *Box_image = new QLabel("Box", this);
@@ -50,14 +55,16 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     QGridLayout *mainLayout = new QGridLayout();
     mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
     mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-    mainLayout->addWidget(&view, 0, 0, 1, 1);
+    mainLayout->addWidget(view, 0, 0, 1, 1);
+
     this->setLayout(mainLayout);
 
     //tmp robot spawning
-    controller->spawnRobots();
+
+    // controller->spawnRobots();
 
     //creating map 
-    map = new Map(controller, this);
+    map = std::make_unique<Map>(controller, this);
 
 
     connect(ok_button, &QPushButton::clicked, [=]() {
@@ -93,9 +100,17 @@ void PageCreate::showEvent(QShowEvent *event) {
 
         // if the user accepts the dialog, it goes to the next page
         if (dialog.exec() == QDialog::Accepted) {
-            controller->map_height = spinBox1->value();
-            controller->map_width = spinBox2->value();
-            view.setFixedSize(controller->map_width, controller->map_height);
+            if(controller){
+                std::cerr << "im in\n";
+                controller->map_height = spinBox1->value();
+                controller->map_width = spinBox2->value();
+                if(view){
+                    view->setFixedSize(controller->map_width, controller->map_height);
+                }
+            }
+            else{
+                std::cerr << "Controller is null" << std::endl;
+            }
             // resize( controller->map_width, controller->map_height);
         }    
         // in case the user cancels the dialog, it goes back to the main page
