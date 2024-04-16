@@ -21,20 +21,24 @@
 #include "Robot.hpp"
 
 #include "Map.hpp"
-
 #include "Controller.hpp"
+#include "CustomGraphicsView.hpp"
+
 
 class PageCreate : public QWidget
 {
     Q_OBJECT;
+    
     public:
         PageCreate(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
         ~PageCreate();
     protected:
         void showEvent(QShowEvent *event) override;
+    private slots:
+        void startRecordingClicks();
     private:
         QStackedWidget *m_stackedWidget;
         Controller *controller;
-        QGraphicsView* view;
+        CustomGraphicsView* view;
         std::unique_ptr<Map> map;
 };

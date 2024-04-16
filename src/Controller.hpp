@@ -13,6 +13,7 @@ class Controller {
         int map_height;
         int map_width;
         QGraphicsScene scene;
+        void AddRobot(int x, int y);
 
     private:
         std::vector<Robot*> robots;

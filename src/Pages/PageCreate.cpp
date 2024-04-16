@@ -1,6 +1,7 @@
 
 #include "PageCreate.hpp"
 #include <iostream>
+#include <QMouseEvent>
 
 PageCreate:: ~PageCreate() {
     std::cerr << "PageCreate destructor start" << std::endl;
@@ -15,12 +16,15 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
  : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
     // parent->resize(300, 500);
     this->controller = controller;
-    view = new QGraphicsView(&controller->scene, this);
+    view = new CustomGraphicsView(&controller->scene, this);
     view->setRenderHint(QPainter::Antialiasing);
 
     //create widgets
     QLabel *Box_image = new QLabel("Box", this);
-    QLabel *Robot_image = new QLabel("Robot", this);
+    //button for robot
+    QPushButton* Robot_button = new QPushButton(this);
+    Robot_button->setText("Robot");
+
     QLabel *Trash_image = new QLabel("Remove", this);
     QLineEdit *Map_name = new QLineEdit;
     QPushButton *ok_button = new QPushButton("Ok", this);
@@ -39,7 +43,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     //add widgets and set layouts    
     QHBoxLayout *toolBarLayout = new QHBoxLayout();
     toolBarLayout->addWidget(Box_image);
-    toolBarLayout->addWidget(Robot_image);
+    toolBarLayout->addWidget(Robot_button);  
     toolBarLayout->addWidget(Trash_image);
     toolBarLayout->addWidget(Map_name);
     toolBarLayout->addWidget(ok_button);
@@ -61,15 +65,27 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     //tmp robot spawning
 
-    // controller->spawnRobots();
+    controller->spawnRobots();
 
     //creating map 
     map = std::make_unique<Map>(controller, this);
 
+    //clicking event
+    connect(Robot_button, &QPushButton::clicked, this, &PageCreate::startRecordingClicks);
 
     connect(ok_button, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1);
     });
+}
+
+
+void PageCreate::startRecordingClicks()
+{
+    view->setMode(CustomGraphicsView::RecordClicks);
+
+
+    controller->AddRobot(view->getLastClickPosition().first, view->getLastClickPosition().second);
+    std::cout << "Added robot at: " << view->getLastClickPosition().first << " " << view->getLastClickPosition().second << std::endl;
 }
 
 
