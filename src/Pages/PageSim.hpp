@@ -8,16 +8,17 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
+#include "Controller.hpp"
+
 class PageSim : public QWidget
 {
     Q_OBJECT;
     public:
-    PageSim(QWidget *parent = nullptr);
+    PageSim(QWidget *parent = nullptr, Controller *controller = nullptr);
     ~PageSim();
   
     private:
     QTimer *timer;
-    QGraphicsScene scene;
     QGraphicsView view;
 
 };

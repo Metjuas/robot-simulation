@@ -1,14 +1,15 @@
 
 #include "PageCreate.hpp"
 #include "MainWindow.hpp"
+#include "Sprite.hpp"
+#include "Robot.hpp"
 
-
-PageCreate::~PageCreate() {
+PageCreate:: ~PageCreate() {
 }
 
 
 PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
- : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller), view(&scene, nullptr) {
+ : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller), view(&controller->scene, nullptr) {
     // parent->resize(300, 500);
     view.setRenderHint(QPainter::Antialiasing);
 
@@ -53,6 +54,9 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
     mainLayout->addWidget(&view, 0, 0, 1, 1);
     this->setLayout(mainLayout);
+
+    Robot* robot = new Robot(100, 100);
+    robot->spawn(&controller->scene);
 
 
     connect(ok_button, &QPushButton::clicked, [=]() {

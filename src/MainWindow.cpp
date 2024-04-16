@@ -4,12 +4,12 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Main window");
-    Controller *controller = new Controller();
+    controller = new Controller();
 
     QStackedWidget *stackedWidget = new QStackedWidget(this);
     pageMenu = new PageMenu(stackedWidget, this);
     pageCreate = new PageCreate(stackedWidget, this, controller);
-    pageSim = new PageSim(this);
+    pageSim = new PageSim(this, controller);
 
     stackedWidget->addWidget(pageMenu);
     stackedWidget->addWidget(pageSim);
@@ -31,5 +31,5 @@ MainWindow::~MainWindow() {
     if(pageCreate != nullptr){
         delete pageCreate;
     }
-    //controller is a pointer, dont delete
+    delete controller;
 }

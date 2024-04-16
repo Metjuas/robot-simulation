@@ -6,29 +6,29 @@
 #include <iostream>
 #include <QPointer>
 
-PageSim::PageSim(QWidget *parent) : QWidget(parent), view(&scene, nullptr) {
+PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent), view(&controller->scene, nullptr) {
 
     view.setRenderHint(QPainter::Antialiasing);
 
     
-    Robot* robot = new Robot(100, 100);
-    robot->spawn(&scene);
+    // Robot* robot = new Robot(100, 100);
+    // robot->spawn(&controller->scene);
 
     const int TickRate = 2;
 
     timer = new QTimer(this);
     
-    connect(timer, &QTimer::timeout, [=]() {
-        static int counter = 0;
-        counter++;
-        if (robot != nullptr) {
-            if(counter % 5 == 0){
-                robot->rotate();
-            }
-            robot->move();
+    // connect(timer, &QTimer::timeout, [=]() {
+    //     static int counter = 0;
+    //     counter++;
+    //     if (robot != nullptr) {
+    //         if(counter % 5 == 0){
+    //             robot->rotate();
+    //         }
+    //         robot->move();
 
-        }
-    });
+    //     }
+    // });
 
     timer->start(TickRate);
 

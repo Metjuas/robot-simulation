@@ -27,6 +27,5 @@ class PageCreate : public QWidget
     private:
         QStackedWidget *m_stackedWidget;
         Controller *controller;
-        QGraphicsScene scene;
         QGraphicsView view;
 };
