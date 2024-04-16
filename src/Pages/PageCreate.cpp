@@ -122,6 +122,8 @@ void PageCreate::showEvent(QShowEvent *event) {
                 controller->map_width = spinBox2->value();
                 if(view){
                     view->setFixedSize(controller->map_width, controller->map_height);
+                    controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
+
                 }
             }
             // resize( controller->map_width, controller->map_height);
