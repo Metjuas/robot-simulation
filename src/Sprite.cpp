@@ -1,7 +1,5 @@
 #include "Sprite.hpp"
-#include <QPixmap>
-#include <QDebug>
-#include <QDir>
+
 
 Sprite::Sprite(const QString &filePath, QGraphicsItem *parent, unsigned int posX, unsigned int posY)
     : QGraphicsPixmapItem(parent) {

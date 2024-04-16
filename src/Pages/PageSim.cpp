@@ -1,10 +1,4 @@
 #include "PageSim.hpp"
-#include <QDebug>
-#include <QDir>
-#include "Sprite.hpp"
-#include "Robot.hpp"
-#include <iostream>
-#include <QPointer>
 
 PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent), view(&controller->scene, nullptr) {
 

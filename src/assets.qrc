@@ -2,5 +2,12 @@
 <qresource>
  <file>assets/RobotAlly.png</file>
  <file>assets/RobotEnemy.png</file>
+ <file>assets/Concrete.png</file>
+ <file>assets/Bricks.png</file>
+ <file>assets/Stone.png</file>
+ <file>assets/Quartz.png</file>
+ <file>assets/Iron.png</file>
+
+
 </qresource>
 </RCC>

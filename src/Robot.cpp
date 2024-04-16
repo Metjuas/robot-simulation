@@ -1,6 +1,5 @@
 #include "Robot.hpp"
-#include <QGraphicsScene>
-#include <cmath>
+
 
 Robot::Robot(int posX, int posY) {
     this->posX = posX;

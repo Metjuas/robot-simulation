@@ -4,6 +4,8 @@
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDebug>
+
 
 
 class PageMenu : public QWidget

@@ -1,7 +1,6 @@
 
 #include "PageMenu.hpp"
-#include "MainWindow.hpp"
-#include <QDebug>
+
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
 
     parent->resize(300, 500);

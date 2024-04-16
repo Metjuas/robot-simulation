@@ -2,6 +2,8 @@
 
 #include "Sprite.hpp"
 #include <QObject>
+#include <QGraphicsScene>
+#include <cmath>
 
 class Robot: public QObject{
     Q_OBJECT;

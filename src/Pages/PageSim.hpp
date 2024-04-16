@@ -9,6 +9,13 @@
 #include <QGraphicsView>
 
 #include "Controller.hpp"
+#include <QDebug>
+#include <QDir>
+#include "Sprite.hpp"
+#include "Robot.hpp"
+#include <iostream>
+#include <QPointer>
+
 
 class PageSim : public QWidget
 {

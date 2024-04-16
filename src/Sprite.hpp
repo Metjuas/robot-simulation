@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <QDir>
+#include <QPixmap>
 
 class Sprite : public QGraphicsPixmapItem {
 public:

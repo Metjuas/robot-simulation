@@ -14,6 +14,12 @@
 #include <QtWidgets>
 
 
+#include "Sprite.hpp"
+#include "Robot.hpp"
+#include <QPixmap>
+
+#include "Map.hpp"
+
 #include "Controller.hpp"
 
 class PageCreate : public QWidget

@@ -1,8 +1,5 @@
 
 #include "PageCreate.hpp"
-#include "MainWindow.hpp"
-#include "Sprite.hpp"
-#include "Robot.hpp"
 
 PageCreate:: ~PageCreate() {
 }
@@ -55,8 +52,12 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     mainLayout->addWidget(&view, 0, 0, 1, 1);
     this->setLayout(mainLayout);
 
+    //tmp robot spawning
     Robot* robot = new Robot(100, 100);
     robot->spawn(&controller->scene);
+
+    //creating map 
+    Map map(controller, this);
 
 
     connect(ok_button, &QPushButton::clicked, [=]() {

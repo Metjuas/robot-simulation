@@ -1,15 +1,17 @@
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#pragma once 
+
+#include <QWidget>
 
 #include <QApplication>
 #include <QMainWindow>
 #include <QTimer>
-#include <QObject> // Include the missing header file
+#include <QObject> 
 #include <QStackedWidget>
+
+#include "./Pages/PageCreate.hpp"
 
 #include "./Pages/PageMenu.hpp"
 #include "./Pages/PageSim.hpp"
-#include "./Pages/PageCreate.hpp"
 
 #include "Controller.hpp"
 
@@ -26,5 +28,3 @@ private:
 
 };
 
-
-#endif 
