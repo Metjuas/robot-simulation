@@ -15,11 +15,21 @@ Controller::~Controller() {
 }
 
 void Controller::addRobot(int x, int y){
-    // if(x + ROBOT_SPRITE_WIDTH/2 > this->map_width || y + ROBOT_SPRITE_HEIGHT/2 > this->map_height){
-    //     std::cout << "Robot out of bounds" << std::endl;
-    // }
+    //this might need some changes
+    QRect newRobotRect(x, y, 50, 50); 
+
+    for (Robot* robot : robots) {
+        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
+
+        if (newRobotRect.intersects(existingRobotRect)) {
+            return;
+        }
+    }
+    // The new robot does not overlap with any existing robots, so add it
     robots.push_back(new Robot(x, y));
 }
+
+
 
 void Controller::spawnTopmostRobot(){
     robots.back()->spawn(&scene);

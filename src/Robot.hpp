@@ -14,7 +14,8 @@ class Robot: public QObject{
         void move();
         void rotate();
         bool detectCollision(QGraphicsScene* scene);
-
+        int getPosX() { return posX; }
+        int getPosY() { return posY; }
     private:
         int posX;
         int posY;

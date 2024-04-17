@@ -4,6 +4,7 @@
 #define SPAWN_OFFSET 5
 
 Robot::Robot(int posX, int posY) {
+    
     this->posX = posX;
     this->posY = posY;
 }
