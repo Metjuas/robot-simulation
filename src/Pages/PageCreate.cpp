@@ -2,6 +2,8 @@
 #include "PageCreate.hpp"
 #include <iostream>
 #include <QMouseEvent>
+#define SCENE_OFFSET 20
+
 
 PageCreate:: ~PageCreate() {
     delete view;
@@ -16,6 +18,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     this->controller = controller;
     view = new CustomGraphicsView(&controller->scene, this);
     view->setRenderHint(QPainter::Antialiasing);
+
 
     //create widgets
     
@@ -104,10 +107,10 @@ void PageCreate::stopRecordingClicks()
 {
     view->setMode(CustomGraphicsView::Normal);
 }
-
 void PageCreate::showEvent(QShowEvent *event) {
     if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
         
+
         QDialog dialog(this);
         dialog.setWindowTitle("Set the size");
         QFormLayout form(&dialog);
@@ -136,10 +139,9 @@ void PageCreate::showEvent(QShowEvent *event) {
                 controller->map_height = spinBox1->value();
                 controller->map_width = spinBox2->value();
                 if(view){
-                    view->setFixedSize(controller->map_width, controller->map_height);
-                    controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
-
-                }
+                view->setFixedSize(controller->map_width + SCENE_OFFSET, controller->map_height + SCENE_OFFSET);
+                controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
+        }
             }
             // resize( controller->map_width, controller->map_height);
         }    

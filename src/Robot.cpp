@@ -23,6 +23,7 @@ void Robot::spawn(QGraphicsScene* scene) {
     QImage image(":assets/RobotAlly.png");
     int width = image.width();
     int height = image.height();
+
     //there is a offset needed, because the sprite will spawn in the top left corner of the image
     sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX-(width/2)+SPAWN_OFFSET, this->posY-(height/2));
     
