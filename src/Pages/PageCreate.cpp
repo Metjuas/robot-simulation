@@ -77,11 +77,14 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     if (checked) {
         // change color to light gray when button is checked
         Robot_button->setStyleSheet("background-color: #D3D3D3"); 
+        current_cursor_state = cursor_state::SPAWN_ROBOT;
         startRecordingClicks();
     } else {
          // reset color when button is unchecked
         Robot_button->setStyleSheet("");
         stopRecordingClicks();
+        current_cursor_state = cursor_state::IDLE;
+
     }
 });
         
@@ -100,19 +103,21 @@ void PageCreate::handleMouseClick(int x, int y){
 
 void PageCreate::startRecordingClicks()
 {
-    QPixmap pixmap(":assets/RobotAlly.png");
-    //adding transparency to the pixmap
-    QPixmap transparentPixmap(pixmap.size());
-    transparentPixmap.fill(Qt::transparent); 
-    //setting the opacity of the pixmap
-    QPainter painter(&transparentPixmap);
-    painter.setOpacity(0.5); 
-    painter.drawPixmap(0, 0, pixmap); 
-    painter.end();
-    //making the cursor robot
-    QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
-    view->viewport()->setCursor(cursor); 
-    view->setMode(CustomGraphicsView::RecordClicks);
+    if(current_cursor_state == cursor_state::SPAWN_ROBOT){
+        QPixmap pixmap(":assets/RobotAlly.png");
+        //adding transparency to the pixmap
+        QPixmap transparentPixmap(pixmap.size());
+        transparentPixmap.fill(Qt::transparent); 
+        //setting the opacity of the pixmap
+        QPainter painter(&transparentPixmap);
+        painter.setOpacity(0.5); 
+        painter.drawPixmap(0, 0, pixmap); 
+        painter.end();
+        //making the cursor robot
+        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        view->viewport()->setCursor(cursor); 
+        view->setMode(CustomGraphicsView::RecordClicks);
+    }
 }
 
 
@@ -121,6 +126,7 @@ void PageCreate::stopRecordingClicks()
     view->viewport()->setCursor(Qt::ArrowCursor);
     view->setMode(CustomGraphicsView::Normal);
 }
+
 void PageCreate::showEvent(QShowEvent *event) {
     if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
         

@@ -1,7 +1,9 @@
 
 #include "PageMenu.hpp"
 #include <iostream>
-
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
 
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
 
@@ -30,7 +32,25 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
     });
 
     connect(select_button, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(3);
+        // stackedWidget->setCurrentIndex(3);
+         QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Map"), "./examples",
+        tr("All Files (*)"));
+
+    if (fileName.isEmpty())
+        return;
+    else {
+        // Open and read the file
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+        // Read the file content
+        QTextStream in(&file);
+        // TODO: Process the content of the map file
+    }
     });
 
     connect(start_button, &QPushButton::clicked, [=]() {

@@ -28,7 +28,11 @@
 class PageCreate : public QWidget
 {
     Q_OBJECT;
-    
+    enum class cursor_state {
+        IDLE,
+        SPAWN_ROBOT
+    };
+
     public:
         PageCreate(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
         ~PageCreate();
@@ -43,4 +47,5 @@ class PageCreate : public QWidget
         Controller *controller;
         CustomGraphicsView* view;
         std::unique_ptr<Map> map;
+        cursor_state current_cursor_state = cursor_state::IDLE;
 };

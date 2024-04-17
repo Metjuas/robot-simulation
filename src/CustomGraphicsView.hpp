@@ -20,7 +20,7 @@ public:
 
     void setMode(Mode mode) { this->mode = mode; }
 
-    std::pair<int, int> getLastClickPosition() const { return lastClickPosition; }
+    std::pair<int, int> getLastClickPosition() const { return last_click_pos; }
     
 signals:
     void mouseClick(int x, int y);
@@ -29,6 +29,6 @@ protected:
 
 private:
     Mode mode;
-    std::pair<int,int> lastClickPosition;
+    std::pair<int,int> last_click_pos;
 
 };
