@@ -36,6 +36,7 @@ class PageCreate : public QWidget
         void showEvent(QShowEvent *event) override;
     private slots:
         void startRecordingClicks();
+        void stopRecordingClicks();
         void handleMouseClick(int x, int y);
     private:
         QStackedWidget *m_stackedWidget;

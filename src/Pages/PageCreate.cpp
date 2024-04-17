@@ -18,11 +18,16 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     view->setRenderHint(QPainter::Antialiasing);
 
     //create widgets
-    QLabel *Box_image = new QLabel("Box", this);
+    
     //button for robot
     QPushButton* Robot_button = new QPushButton(this);
-    Robot_button->setText("Robot");
-
+    QIcon icon(":assets/RobotAlly.png");
+    Robot_button->setIcon(icon);
+    //settings size
+    Robot_button->setIconSize(QSize(30, 30));
+    Robot_button->setCheckable(true);
+    
+    QLabel *Box_image = new QLabel("Box", this);
     QLabel *Trash_image = new QLabel("Remove", this);
     QLineEdit *Map_name = new QLineEdit;
     QPushButton *ok_button = new QPushButton("Ok", this);
@@ -61,16 +66,22 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     this->setLayout(mainLayout);
 
-    //tmp robot spawning
-
-    controller->spawnRobots();
-
     //creating map 
     map = std::make_unique<Map>(controller, this);
 
     //clicking event
-    connect(Robot_button, &QPushButton::clicked, this, &PageCreate::startRecordingClicks);
-    
+    connect(Robot_button, &QPushButton::toggled, [this, Robot_button](bool checked) {
+    if (checked) {
+        // change color to light gray when button is checked
+        Robot_button->setStyleSheet("background-color: #D3D3D3"); 
+        startRecordingClicks();
+    } else {
+         // reset color when button is unchecked
+        Robot_button->setStyleSheet("");
+        stopRecordingClicks();
+    }
+});
+        
     connect(view, &CustomGraphicsView::mouseClick, this, &PageCreate::handleMouseClick);
 
     connect(ok_button, &QPushButton::clicked, [=]() {
@@ -89,6 +100,10 @@ void PageCreate::startRecordingClicks()
     view->setMode(CustomGraphicsView::RecordClicks);
 }
 
+void PageCreate::stopRecordingClicks()
+{
+    view->setMode(CustomGraphicsView::Normal);
+}
 
 void PageCreate::showEvent(QShowEvent *event) {
     if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
