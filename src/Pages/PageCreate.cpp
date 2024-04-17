@@ -100,11 +100,25 @@ void PageCreate::handleMouseClick(int x, int y){
 
 void PageCreate::startRecordingClicks()
 {
+    QPixmap pixmap(":assets/RobotAlly.png");
+    //adding transparency to the pixmap
+    QPixmap transparentPixmap(pixmap.size());
+    transparentPixmap.fill(Qt::transparent); 
+    //setting the opacity of the pixmap
+    QPainter painter(&transparentPixmap);
+    painter.setOpacity(0.5); 
+    painter.drawPixmap(0, 0, pixmap); 
+    painter.end();
+    //making the cursor robot
+    QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+    view->viewport()->setCursor(cursor); 
     view->setMode(CustomGraphicsView::RecordClicks);
 }
 
+
 void PageCreate::stopRecordingClicks()
 {
+    view->viewport()->setCursor(Qt::ArrowCursor);
     view->setMode(CustomGraphicsView::Normal);
 }
 void PageCreate::showEvent(QShowEvent *event) {
