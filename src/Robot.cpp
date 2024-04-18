@@ -31,6 +31,11 @@ void Robot::spawn(QGraphicsScene* scene) {
     scene->addItem(sprite);
 }
 
+void Robot::despawn(QGraphicsScene* scene)
+{
+    scene->removeItem(sprite);
+}
+
 void Robot::move() {
     if (sprite) { 
         //calculating new position based on current rotation

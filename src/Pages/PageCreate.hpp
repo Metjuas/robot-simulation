@@ -30,7 +30,9 @@ class PageCreate : public QWidget
     Q_OBJECT;
     enum class cursor_state {
         IDLE,
-        SPAWN_ROBOT
+        SPAWN_ROBOT,
+        SPAWN_BOX,
+        REMOVE_ITEM
     };
 
     public:

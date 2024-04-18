@@ -30,8 +30,22 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     Robot_button->setIconSize(QSize(30, 30));
     Robot_button->setCheckable(true);
     
-    QLabel *Box_image = new QLabel("Box", this);
-    QLabel *Trash_image = new QLabel("Remove", this);
+    //button for Box
+    QPushButton* box_button = new QPushButton(this);
+    QIcon b_icon(":assets/Box.png");
+    box_button->setIcon(b_icon);
+    //settings size
+    box_button->setIconSize(QSize(30, 30));
+    box_button->setCheckable(true);
+
+    //button for Remove
+    QPushButton* trash_button = new QPushButton(this);
+    QIcon t_icon(":assets/Box.png");
+    trash_button->setIcon(t_icon);
+    //settings size
+    trash_button->setIconSize(QSize(30, 30));
+    trash_button->setCheckable(true);
+
     QLineEdit *Map_name = new QLineEdit;
     QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
@@ -48,9 +62,9 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     //add widgets and set layouts    
     QHBoxLayout *toolBarLayout = new QHBoxLayout();
-    toolBarLayout->addWidget(Box_image);
+    toolBarLayout->addWidget(box_button);
     toolBarLayout->addWidget(Robot_button);  
-    toolBarLayout->addWidget(Trash_image);
+    toolBarLayout->addWidget(trash_button);
     toolBarLayout->addWidget(Map_name);
     toolBarLayout->addWidget(ok_button);
     toolBarLayout->addWidget(save_button);
@@ -74,19 +88,47 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     //clicking event
     connect(Robot_button, &QPushButton::toggled, [this, Robot_button](bool checked) {
-    if (checked) {
-        // change color to light gray when button is checked
-        Robot_button->setStyleSheet("background-color: #D3D3D3"); 
-        current_cursor_state = cursor_state::SPAWN_ROBOT;
-        startRecordingClicks();
-    } else {
-         // reset color when button is unchecked
-        Robot_button->setStyleSheet("");
-        stopRecordingClicks();
-        current_cursor_state = cursor_state::IDLE;
+        if (checked) {
+            // change color to light gray when button is checked
+            Robot_button->setStyleSheet("background-color: #D3D3D3"); 
+            current_cursor_state = cursor_state::SPAWN_ROBOT;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            Robot_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
 
-    }
-});
+        }
+    });
+
+    connect(box_button, &QPushButton::toggled, [this, box_button](bool checked) {
+        if (checked) {
+            // change color to light gray when button is checked
+            box_button->setStyleSheet("background-color: #D3D3D3"); 
+            current_cursor_state = cursor_state::SPAWN_BOX;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            box_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
+        }
+    });
+
+    connect(trash_button, &QPushButton::toggled, [this, trash_button](bool checked) {
+        if (checked) {
+            // change color to light gray when button is checked
+            trash_button->setStyleSheet("background-color: #D3D3D3"); 
+            current_cursor_state = cursor_state::REMOVE_ITEM;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            trash_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
+        }
+    });
         
     connect(view, &CustomGraphicsView::mouseClick, this, &PageCreate::handleMouseClick);
 
@@ -97,8 +139,19 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
 void PageCreate::handleMouseClick(int x, int y){
     std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-    controller->addRobot(x, y);
-    controller->spawnTopmostRobot();
+    if(current_cursor_state == cursor_state::SPAWN_ROBOT){
+        controller->addRobot(x, y);
+        controller->spawnTopmostRobot();
+    }
+    else if(current_cursor_state == cursor_state::SPAWN_BOX)
+    {
+        controller->addBox(x, y);
+        controller->spawnTopmostBox();
+    }
+    else if(current_cursor_state == cursor_state::REMOVE_ITEM)
+    {
+        controller->removeItem(x, y);
+    }
 }
 
 void PageCreate::startRecordingClicks()
@@ -117,6 +170,26 @@ void PageCreate::startRecordingClicks()
         QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor); 
         view->setMode(CustomGraphicsView::RecordClicks);
+    }
+    else if(current_cursor_state == cursor_state::SPAWN_BOX)
+    {
+        QPixmap pixmap(":assets/Box.png");
+        //adding transparency to the pixmap
+        QPixmap transparentPixmap(pixmap.size());
+        transparentPixmap.fill(Qt::transparent); 
+        //setting the opacity of the pixmap
+        QPainter painter(&transparentPixmap);
+        painter.setOpacity(0.5); 
+        painter.drawPixmap(0, 0, pixmap); 
+        painter.end();
+        //making the cursor robot
+        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        view->viewport()->setCursor(cursor);
+        view->setMode(CustomGraphicsView::RecordClicks);        
+    }
+    else if(current_cursor_state == cursor_state::REMOVE_ITEM)
+    {
+        view->setMode(CustomGraphicsView::RecordClicks);  
     }
 }
 
