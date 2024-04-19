@@ -24,3 +24,12 @@ void Box::despawn(QGraphicsScene* scene)
 {
     scene->removeItem(sprite);
 }
+
+std::string Box::getSaveString()
+{
+    std::string out =   "(" +
+                        std::to_string(this->x) + "," +
+                        std::to_string(this->y) + 
+                        ")";
+    return out;
+}

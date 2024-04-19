@@ -7,6 +7,10 @@ Robot::Robot(int posX, int posY) {
     
     this->posX = posX;
     this->posY = posY;
+    this->robotName = "robot";
+    this->rotationAngle = 60;
+    this->distance = 50;
+    this->direction = LEFT;
 }
 
 Robot::~Robot() {
@@ -58,4 +62,19 @@ void Robot::rotate() {
 bool Robot::detectCollision(QGraphicsScene* scene) {
     scene = scene;
     return false;
+}
+
+std::string Robot::getSaveString()
+{
+    std::string robotDirection = this->direction==LEFT ? "LEFT" : "RIGHT";
+
+    std::string out =   "(" + 
+                        this->robotName + "," +
+                        std::to_string(this->posX) + "," +
+                        std::to_string(this->posY) + "," +
+                        std::to_string(this->distance) + "," +
+                        std::to_string(this->rotationAngle) + "," +
+                        robotDirection
+                        + ")";
+    return out;
 }

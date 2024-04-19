@@ -91,3 +91,30 @@ void Controller::removeItem(int x, int y)
         }
     }
 }
+
+int Controller::saveMap(std::string mapName)
+{
+    if(mapName.size() == 0)return 1;
+    if(std::filesystem::exists("maps/" + mapName + ".map"))return 2;
+    //create map directory if not exists
+    if (!std::filesystem::is_directory("maps") || !std::filesystem::exists("maps"))
+    {
+        std::filesystem::create_directory("maps");
+    }
+
+    //create map file
+    std::ofstream mapFile("maps/" + mapName + ".map");
+    //std::cout << "maps/" + mapName + ".map";
+
+    //insert data to map file
+
+    mapFile << "\n";
+    for (Robot* robot : robots) {
+        mapFile << robot->getSaveString();
+    }
+    mapFile << "\n";
+    for (Box* box : boxes) {
+        mapFile << box->getSaveString();
+    }
+    return 0;
+}

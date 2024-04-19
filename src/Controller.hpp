@@ -4,6 +4,10 @@
 #include "Robot.hpp"
 #include "Box.hpp"
 #include <QGraphicsView>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <filesystem>
 
 
 class Controller {
@@ -19,6 +23,7 @@ class Controller {
         void addBox(int x, int y);
         void spawnTopmostBox();
         void removeItem(int x, int y);
+        int saveMap(std::string mapName);
 
     private:
         std::vector<Robot*> robots;

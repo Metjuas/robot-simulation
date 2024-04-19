@@ -34,8 +34,8 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
     connect(select_button, &QPushButton::clicked, [=]() {
         // stackedWidget->setCurrentIndex(3);
          QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Map"), "./examples",
-        tr("All Files (*)"));
+        tr("Open Map"), "./maps",
+        tr("All Files (map)"));
 
     if (fileName.isEmpty())
         return;

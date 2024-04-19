@@ -141,6 +141,31 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     connect(ok_button, &QPushButton::clicked, [=]() {
         stackedWidget->setCurrentIndex(1);
     });
+
+    connect(save_button, &QPushButton::clicked, [=]() {
+        int ret = controller->saveMap(Map_name->displayText().toUtf8().constData());
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("Caution");
+
+        if(ret == 1)
+        {
+            msgBox.setText("Please insert map name.");
+        }
+        else if(ret == 2)
+        {
+            msgBox.setText("Map with this name already exists!");
+        }
+        else if(ret == 0)
+        {
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setWindowTitle("Information");
+            msgBox.setText("Map created successfuly.");
+        }
+
+        msgBox.exec();
+    });
 }
 
 void PageCreate::handleMouseClick(int x, int y){

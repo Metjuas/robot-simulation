@@ -5,6 +5,11 @@
 #include <QGraphicsScene>
 #include <cmath>
 
+enum RotationDirection{
+    LEFT,
+    RIGHT
+};
+
 class Robot: public QObject{
     Q_OBJECT;
     public:
@@ -17,9 +22,15 @@ class Robot: public QObject{
         bool detectCollision(QGraphicsScene* scene);
         int getPosX() { return posX; }
         int getPosY() { return posY; }
+        std::string getSaveString();
     private:
         int posX;
         int posY;
+        int distance;
+        std::string robotName;
+        RotationDirection direction;
+        int rotationAngle;
+
         Sprite *sprite = nullptr;
 };
             
