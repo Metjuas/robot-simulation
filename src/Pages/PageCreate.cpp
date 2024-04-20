@@ -2,7 +2,7 @@
 #include "PageCreate.hpp"
 #include <iostream>
 #include <QMouseEvent>
-#define SCENE_OFFSET 20
+#define SCENE_OFFSET 0
 
 
 PageCreate:: ~PageCreate() {
@@ -139,7 +139,9 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     connect(view, &CustomGraphicsView::mouseClick, this, &PageCreate::handleMouseClick);
 
     connect(ok_button, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(1);
+        controller->unselectRobot();
+        parent->resize(300,500);
+        stackedWidget->setCurrentIndex(0);
     });
 
     connect(save_button, &QPushButton::clicked, [=]() {
@@ -166,6 +168,8 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
         msgBox.exec();
     });
+
+    view->setMode(CustomGraphicsView::RecordClicks);
 }
 
 void PageCreate::handleMouseClick(int x, int y){
@@ -183,12 +187,16 @@ void PageCreate::handleMouseClick(int x, int y){
     {
         controller->removeItem(x, y);
     }
+    else
+    {
+        controller->selectRobot(x,y);
+    }
 }
 
 void PageCreate::startRecordingClicks()
 {
     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
-        QPixmap pixmap(":assets/RobotAlly.png");
+        QPixmap pixmap(":assets/RobotEnemy.png");
         //adding transparency to the pixmap
         QPixmap transparentPixmap(pixmap.size());
         transparentPixmap.fill(Qt::transparent); 
@@ -200,7 +208,7 @@ void PageCreate::startRecordingClicks()
         //making the cursor robot
         QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor); 
-        view->setMode(CustomGraphicsView::RecordClicks);
+        //view->setMode(CustomGraphicsView::RecordClicks);
     }
     else if(current_cursor_state == cursor_state::SPAWN_BOX)
     {
@@ -216,7 +224,7 @@ void PageCreate::startRecordingClicks()
         //making the cursor robot
         QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor);
-        view->setMode(CustomGraphicsView::RecordClicks);        
+        //view->setMode(CustomGraphicsView::RecordClicks);        
     }
     else if(current_cursor_state == cursor_state::REMOVE_ITEM)
     {
@@ -232,7 +240,7 @@ void PageCreate::startRecordingClicks()
         //making the cursor robot
         QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor);
-        view->setMode(CustomGraphicsView::RecordClicks);    
+        //view->setMode(CustomGraphicsView::RecordClicks);    
     }
 }
 
@@ -240,7 +248,7 @@ void PageCreate::startRecordingClicks()
 void PageCreate::stopRecordingClicks()
 {
     view->viewport()->setCursor(Qt::ArrowCursor);
-    view->setMode(CustomGraphicsView::Normal);
+    //view->setMode(CustomGraphicsView::Normal);
 }
 
 void PageCreate::showEvent(QShowEvent *event) {

@@ -1,7 +1,7 @@
 #include "Robot.hpp"
 #include <iostream>
 
-#define SPAWN_OFFSET 5
+#define SPAWN_OFFSET 0
 
 Robot::Robot(int posX, int posY) {
     
@@ -35,12 +35,12 @@ Robot::~Robot() {
 
 void Robot::spawn(QGraphicsScene* scene) {
     //create a new sprite and add it to the scene
-    QImage image(":assets/RobotAlly.png");
+    QImage image(":assets/RobotEnemy.png");
     int width = image.width();
     int height = image.height();
 
     //there is a offset needed, because the sprite will spawn in the top left corner of the image
-    sprite = new Sprite(":assets/RobotAlly.png", nullptr, this->posX-(width/2)+SPAWN_OFFSET, this->posY-(height/2));
+    sprite = new Sprite(":assets/RobotEnemy.png", nullptr, this->posX-(width/2), this->posY-(height/2));
     
     scene->addItem(sprite);
 }
@@ -87,4 +87,21 @@ std::string Robot::getSaveString()
                         robotDirection
                         + ")";
     return out;
+}
+
+
+void Robot::select()
+{
+    if(this->sprite != nullptr)
+    {
+        this->sprite->changeImage(":assets/RobotAlly.png");
+    }
+}
+
+void Robot::unselect()
+{
+    if(this->sprite != nullptr)
+    {
+        this->sprite->changeImage(":assets/RobotEnemy.png");
+    }
 }

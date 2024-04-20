@@ -7,6 +7,7 @@
 Controller::Controller() {
     this->map_height = 0;
     this->map_width = 0;
+    this->selectedRobot = nullptr;
 }
 
 Controller::~Controller() {
@@ -142,6 +143,7 @@ void Controller::removeItem(int x, int y)
         QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
 
         if (newRobotRect.intersects(existingRobotRect)) {
+            if(robot == this->selectedRobot)this->selectedRobot=nullptr;
             robots.erase(std::remove(robots.begin(), robots.end(), robot), robots.end());
             robot->despawn(&scene);
             return;
@@ -261,4 +263,44 @@ int Controller::countChars(std::string input, char chr)
         if(input[i] == chr)cnt++;
     }
     return cnt;
+}
+
+int Controller::selectRobot(int x, int y)
+{
+    //check if clicked on robot 
+    Robot *newselectedRobot = nullptr;
+    for (Robot* robot : this->robots) {
+        QRect existingRobotRect(robot->getPosX()-32, robot->getPosY()-32, 64, 64);
+        if(existingRobotRect.contains(x,y))
+        {
+            newselectedRobot = robot;
+        }
+    }
+
+    //no robot was selected
+    if(newselectedRobot == nullptr)return 0;
+
+    //unselect if selected same robot
+    if(newselectedRobot == this->selectedRobot)
+    {
+        unselectRobot();
+        return 2;
+    }
+
+    //select robot
+    unselectRobot();
+
+    this->selectedRobot = newselectedRobot;
+    selectedRobot->select();
+    return 1;
+
+}
+
+void Controller::unselectRobot()
+{
+    if(this->selectedRobot != nullptr)
+    {
+        this->selectedRobot->unselect();
+        this->selectedRobot = nullptr;
+    }
 }

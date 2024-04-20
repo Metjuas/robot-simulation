@@ -28,10 +28,13 @@ class Controller {
         int saveMap(std::string mapName);
         int loadMap(std::string filePath);
 
+        int selectRobot(int x, int y);
+        void unselectRobot();
     private:
         std::string getFileObject(std::ifstream &file);
         int countChars(std::string input, char chr);
         std::vector<Robot*> robots;
         std::vector<Box*> boxes;
+        Robot *selectedRobot;
 };
 

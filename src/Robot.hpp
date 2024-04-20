@@ -24,6 +24,8 @@ class Robot: public QObject{
         int getPosX() { return posX; }
         int getPosY() { return posY; }
         std::string getSaveString();
+        void select();
+        void unselect();
     private:
         int posX;
         int posY;
