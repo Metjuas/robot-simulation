@@ -14,7 +14,6 @@ PageCreate:: ~PageCreate() {
 
 PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
  : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
-    // parent->resize(300, 500);
     this->controller = controller;
     view = new CustomGraphicsView(&controller->scene, this);
     view->setRenderHint(QPainter::Antialiasing);
@@ -50,12 +49,12 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
 
-    QLineEdit *Robot_name = new QLineEdit;
-    QDoubleSpinBox *direction_num = new QDoubleSpinBox();
+    Robot_name = new QLineEdit;
+    direction_num = new QSpinBox();
     direction_num->setPrefix("Direction:");
-    QDoubleSpinBox *distance_num = new QDoubleSpinBox();
-    direction_num->setPrefix("Distance:");
-    QComboBox *direction_type = new QComboBox();
+    distance_num = new QSpinBox();
+    distance_num->setPrefix("Distance:");
+    direction_type = new QComboBox();
     direction_type->addItem("left");
     direction_type->addItem("right");
 
@@ -169,6 +168,37 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
         msgBox.exec();
     });
 
+    
+    //Robot setup events
+    connect(Robot_name, static_cast<void(QLineEdit::*)(const QString &)>(&QLineEdit::textChanged), [=](const QString &text) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setRobotName(text.toStdString());
+        }
+    });
+
+    connect(direction_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setRotation(value);
+        }
+    });
+
+    connect(distance_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setDistance(value);
+        }
+    });
+
+    connect(direction_type, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setDirection(index==0?LEFT:RIGHT);
+        }
+    });
+
+
     view->setMode(CustomGraphicsView::RecordClicks);
 }
 
@@ -177,6 +207,7 @@ void PageCreate::handleMouseClick(int x, int y){
     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
         controller->addRobot(x, y);
         controller->spawnTopmostRobot();
+        controller->selectRobot(x,y);
     }
     else if(current_cursor_state == cursor_state::SPAWN_BOX)
     {
@@ -196,7 +227,7 @@ void PageCreate::handleMouseClick(int x, int y){
 void PageCreate::startRecordingClicks()
 {
     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
-        QPixmap pixmap(":assets/RobotEnemy.png");
+        QPixmap pixmap(":assets/RobotAlly.png");
         //adding transparency to the pixmap
         QPixmap transparentPixmap(pixmap.size());
         transparentPixmap.fill(Qt::transparent); 

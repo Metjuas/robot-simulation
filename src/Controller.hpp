@@ -27,6 +27,7 @@ class Controller {
         void removeItem(int x, int y);
         int saveMap(std::string mapName);
         int loadMap(std::string filePath);
+        Robot *getSelectedRobot() { return this->selectedRobot; }
 
         int selectRobot(int x, int y);
         void unselectRobot();

@@ -236,6 +236,7 @@ int Controller::loadMap(std::string filePath)
     }
     if(mapFile.get() != '\n')return 2;
 
+    this->selectedRobot = nullptr;
     return 0;
 }
 
