@@ -19,13 +19,18 @@ class Controller {
         int map_width;
         QGraphicsScene scene;
         void addRobot(int x, int y);
+        void addRobot(std::string input);
         void spawnTopmostRobot();
         void addBox(int x, int y);
+        void addBox(std::string input);
         void spawnTopmostBox();
         void removeItem(int x, int y);
         int saveMap(std::string mapName);
+        int loadMap(std::string filePath);
 
     private:
+        std::string getFileObject(std::ifstream &file);
+        int countChars(std::string input, char chr);
         std::vector<Robot*> robots;
         std::vector<Box*> boxes;
 };

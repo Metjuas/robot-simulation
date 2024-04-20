@@ -13,6 +13,16 @@ Robot::Robot(int posX, int posY) {
     this->direction = LEFT;
 }
 
+Robot::Robot(std::string name, int posX, int posY, int rotation, int distance, RotationDirection direction)
+{
+    this->posX = posX;
+    this->posY = posY;
+    this->robotName = name;
+    this->rotationAngle = rotation;
+    this->distance = distance;
+    this->direction = direction;
+}
+
 Robot::~Robot() {
     //if the sprite exists, delete it
 

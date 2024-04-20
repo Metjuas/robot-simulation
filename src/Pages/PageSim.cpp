@@ -1,7 +1,7 @@
 #include "PageSim.hpp"
 #include <iostream>
 
-PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
+PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent){
 
     // view.setRenderHint(QPainter::Antialiasing);
     view = new QGraphicsView(&controller->scene, nullptr);
@@ -20,6 +20,13 @@ PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
     QPushButton *right_button = new QPushButton("->", this);
     //button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+    //pause button Click
+    connect(menu_button, &QPushButton::clicked, [=]() {
+        parent->resize(300,500);
+        stackedWidget->setCurrentIndex(0);
+    });
+
+    //menu button Click
     connect(pause_button, &QPushButton::clicked, [=]() {
         if (timer->isActive()) {
             timer->stop();

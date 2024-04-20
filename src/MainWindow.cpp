@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     controller = std::make_unique<Controller>();
 
     QStackedWidget *stackedWidget = new QStackedWidget(this);
-    pageMenu = std::make_unique<PageMenu>(stackedWidget, this);
+    pageMenu = std::make_unique<PageMenu>(stackedWidget, this, controller.get());
     pageCreate = std::make_unique<PageCreate>(stackedWidget, this, controller.get());
-    pageSim = std::make_unique<PageSim>(this, controller.get());
+    pageSim = std::make_unique<PageSim>(stackedWidget, this, controller.get());
 
     stackedWidget->addWidget(pageMenu.get());
     stackedWidget->addWidget(pageSim.get());
