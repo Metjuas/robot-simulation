@@ -68,7 +68,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     toolBarLayout->addWidget(ok_button);
     toolBarLayout->addWidget(save_button);
 
-    QVBoxLayout *dataSetLayout = new QVBoxLayout();
+    dataSetLayout = new QVBoxLayout();
     dataSetLayout->addWidget(Robot_name);
     dataSetLayout->addWidget(direction_num);
     dataSetLayout->addWidget(distance_num);
@@ -198,7 +198,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
         }
     });
 
-
+    robotSelectGUI(false);
     view->setMode(CustomGraphicsView::RecordClicks);
 }
 
@@ -208,6 +208,7 @@ void PageCreate::handleMouseClick(int x, int y){
         controller->addRobot(x, y);
         controller->spawnTopmostRobot();
         controller->selectRobot(x,y);
+        robotSelectGUI(true);
     }
     else if(current_cursor_state == cursor_state::SPAWN_BOX)
     {
@@ -217,10 +218,19 @@ void PageCreate::handleMouseClick(int x, int y){
     else if(current_cursor_state == cursor_state::REMOVE_ITEM)
     {
         controller->removeItem(x, y);
+        if(controller->getSelectedRobot() == nullptr)robotSelectGUI(false);
     }
     else
     {
-        controller->selectRobot(x,y);
+        int ret = controller->selectRobot(x,y);
+        if(ret == 1)
+        {
+            robotSelectGUI(true);
+        }
+        else if(ret == 2)
+        {
+            robotSelectGUI(false);
+        }
     }
 }
 
@@ -327,4 +337,30 @@ void PageCreate::showEvent(QShowEvent *event) {
     }
 
     QWidget::showEvent(event);
+}
+
+void PageCreate::robotSelectGUI(bool toggle)
+{
+    if(toggle)
+    {
+        Robot_name->setEnabled(true);
+        direction_num->setEnabled(true);
+        distance_num->setEnabled(true);
+        direction_type->setEnabled(true);
+
+        //load data to widgets
+        Robot *robot = this->controller->getSelectedRobot();
+        Robot_name->setText(QString::fromStdString(robot->getRobotName()));
+        direction_num->setValue(robot->getRotation());
+        distance_num->setValue(robot->getDistance());
+        direction_type->setCurrentIndex(robot->getDirection()==LEFT?0:1);
+
+    }
+    else
+    {
+        Robot_name->setEnabled(false);
+        direction_num->setEnabled(false);
+        distance_num->setEnabled(false);
+        direction_type->setEnabled(false);
+    }
 }

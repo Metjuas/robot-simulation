@@ -45,12 +45,16 @@ class PageCreate : public QWidget
         void stopRecordingClicks();
         void handleMouseClick(int x, int y);
     private:
+        void robotSelectGUI(bool toggle);
+
         QStackedWidget *m_stackedWidget;
         Controller *controller;
         CustomGraphicsView* view;
         std::unique_ptr<Map> map;
         cursor_state current_cursor_state = cursor_state::IDLE;
 
+
+        QVBoxLayout *dataSetLayout;
         //Robot setup widgets
         QLineEdit *Robot_name;
         QSpinBox *direction_num;
