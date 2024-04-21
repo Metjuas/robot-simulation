@@ -94,12 +94,15 @@ bool Robot::detectCollision(QGraphicsScene* scene) {
     qreal centerX = sprite->pos().x() + radius + cos(sprite->rotation() * M_PI / 180.0) * (radius + detectionDistance);
     qreal centerY = sprite->pos().y() + radius + sin(sprite->rotation() * M_PI / 180.0) * (radius + detectionDistance);
     // Create the detection rectangle
-
     QRectF detectionRect(centerX - detectionDistance / 2.0, centerY - detectionDistance / 2.0, detectionDistance, detectionDistance);
 
     QList<QGraphicsItem*> itemsInFront = scene->items(detectionRect);
+    QList<QGraphicsItem*> itemsOnRobot = sprite->collidingItems();
 
-    if (!itemsInFront.isEmpty()) {
+    //this might need to be here
+    // itemsOnRobot.removeAll(sprite);
+
+    if (!itemsInFront.isEmpty() ||  !itemsOnRobot.isEmpty()) {
         qDebug() << "Hello";
         return true;
     }
