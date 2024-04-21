@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QStackedWidget>
 
 #include "Controller.hpp"
 #include <QDebug>
@@ -22,13 +23,16 @@ class PageSim : public QWidget
 {
     Q_OBJECT;
     public:
-        PageSim(QWidget *parent = nullptr, Controller *controller = nullptr);
-        ~PageSim();
-
-    private:
-        QGraphicsView *view;
-        Controller *controller;
+    PageSim(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
+    ~PageSim();
+        
     protected:
-        void showEvent(QShowEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+  
+    private:
+    QStackedWidget *m_stackedWidget;
+    QTimer *timer;
+    QGraphicsView *view;
+    Controller *controller;
 
 };

@@ -5,8 +5,8 @@
 #include <QMessageBox>
 #include <QTextStream>
 
-PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(parent) {
-
+PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
+    this->controller = controller;
     parent->resize(300, 500);
 
     //create widgets
@@ -33,28 +33,37 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent) : QWidget(par
 
     connect(select_button, &QPushButton::clicked, [=]() {
         // stackedWidget->setCurrentIndex(3);
-         QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Map"), "./examples",
-        tr("All Files (*)"));
+        QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Map"), "./maps",
+        tr("Map files (*.map)"));
 
     if (fileName.isEmpty())
         return;
-    else {
-        // Open and read the file
-        QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly)) {
-            QMessageBox::information(this, tr("Unable to open file"),
-                file.errorString());
-            return;
+    else 
+    {
+        int ret = this->controller->loadMap(fileName.toStdString());
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("Caution");
+
+        if(ret == 1)
+        {
+            msgBox.setText("Cannot open map file!");
+            msgBox.exec();
         }
-        // Read the file content
-        QTextStream in(&file);
-        // TODO: Process the content of the map file
+        else if(ret == 2)
+        {
+            msgBox.setText("Invlid file format.");
+            msgBox.exec();
+        }
+
+
+        
     }
     });
 
     connect(start_button, &QPushButton::clicked, [=]() {
-        parent->resize(800,400);
+        parent->resize(this->controller->map_width,this->controller->map_height);
         stackedWidget->setCurrentIndex(1);
     });
 }

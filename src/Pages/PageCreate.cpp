@@ -2,7 +2,7 @@
 #include "PageCreate.hpp"
 #include <iostream>
 #include <QMouseEvent>
-#define SCENE_OFFSET 20
+#define SCENE_OFFSET 0
 
 
 PageCreate:: ~PageCreate() {
@@ -14,7 +14,6 @@ PageCreate:: ~PageCreate() {
 
 PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
  : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
-    // parent->resize(300, 500);
     this->controller = controller;
     view = new CustomGraphicsView(&controller->scene, this);
     view->setRenderHint(QPainter::Antialiasing);
@@ -30,32 +29,46 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     Robot_button->setIconSize(QSize(30, 30));
     Robot_button->setCheckable(true);
     
-    QLabel *Box_image = new QLabel("Box", this);
-    QLabel *Trash_image = new QLabel("Remove", this);
+    //button for Box
+    QPushButton* box_button = new QPushButton(this);
+    QIcon b_icon(":assets/Box.png");
+    box_button->setIcon(b_icon);
+    //settings size
+    box_button->setIconSize(QSize(30, 30));
+    box_button->setCheckable(true);
+
+    //button for Remove
+    QPushButton* trash_button = new QPushButton(this);
+    QIcon t_icon(":assets/remove.png");
+    trash_button->setIcon(t_icon);
+    //settings size
+    trash_button->setIconSize(QSize(30, 30));
+    trash_button->setCheckable(true);
+
     QLineEdit *Map_name = new QLineEdit;
     QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
 
-    QLineEdit *Robot_name = new QLineEdit;
-    QDoubleSpinBox *direction_num = new QDoubleSpinBox();
+    Robot_name = new QLineEdit;
+    direction_num = new QSpinBox();
     direction_num->setPrefix("Direction:");
-    QDoubleSpinBox *distance_num = new QDoubleSpinBox();
-    direction_num->setPrefix("Distance:");
-    QComboBox *direction_type = new QComboBox();
+    distance_num = new QSpinBox();
+    distance_num->setPrefix("Distance:");
+    direction_type = new QComboBox();
     direction_type->addItem("left");
     direction_type->addItem("right");
 
 
     //add widgets and set layouts    
     QHBoxLayout *toolBarLayout = new QHBoxLayout();
-    toolBarLayout->addWidget(Box_image);
+    toolBarLayout->addWidget(box_button);
     toolBarLayout->addWidget(Robot_button);  
-    toolBarLayout->addWidget(Trash_image);
+    toolBarLayout->addWidget(trash_button);
     toolBarLayout->addWidget(Map_name);
     toolBarLayout->addWidget(ok_button);
     toolBarLayout->addWidget(save_button);
 
-    QVBoxLayout *dataSetLayout = new QVBoxLayout();
+    dataSetLayout = new QVBoxLayout();
     dataSetLayout->addWidget(Robot_name);
     dataSetLayout->addWidget(direction_num);
     dataSetLayout->addWidget(distance_num);
@@ -72,33 +85,153 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     //creating map 
     map = std::make_unique<Map>(controller, this);
 
-    //clicking event
-    connect(Robot_button, &QPushButton::toggled, [this, Robot_button](bool checked) {
-    if (checked) {
-        // change color to light gray when button is checked
-        Robot_button->setStyleSheet("background-color: #D3D3D3"); 
-        current_cursor_state = cursor_state::SPAWN_ROBOT;
-        startRecordingClicks();
-    } else {
-         // reset color when button is unchecked
-        Robot_button->setStyleSheet("");
-        stopRecordingClicks();
-        current_cursor_state = cursor_state::IDLE;
+    //clicking events
+    connect(Robot_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+        if (checked) {
+            // change color to light gray when button is checked
+            Robot_button->setStyleSheet("background-color: #D3D3D3"); 
+            box_button->setStyleSheet("");
+            trash_button->setStyleSheet("");
+            current_cursor_state = cursor_state::SPAWN_ROBOT;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            Robot_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
 
-    }
-});
+        }
+    });
+
+    connect(box_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+        if (checked) {
+            // change color to light gray when button is checked
+            box_button->setStyleSheet("background-color: #D3D3D3");
+            Robot_button->setStyleSheet("");
+            trash_button->setStyleSheet("");
+            current_cursor_state = cursor_state::SPAWN_BOX;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            box_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
+        }
+    });
+
+    connect(trash_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+        if (checked) {
+            // change color to light gray when button is checked
+            trash_button->setStyleSheet("background-color: #D3D3D3"); 
+            box_button->setStyleSheet("");
+            Robot_button->setStyleSheet("");
+            current_cursor_state = cursor_state::REMOVE_ITEM;
+            startRecordingClicks();
+        } else {
+            // reset color when button is unchecked
+            trash_button->setStyleSheet("");
+            stopRecordingClicks();
+            current_cursor_state = cursor_state::IDLE;
+        }
+    });
         
     connect(view, &CustomGraphicsView::mouseClick, this, &PageCreate::handleMouseClick);
 
     connect(ok_button, &QPushButton::clicked, [=]() {
-        stackedWidget->setCurrentIndex(1);
+        controller->unselectRobot();
+        parent->resize(300,500);
+        stackedWidget->setCurrentIndex(0);
     });
+
+    connect(save_button, &QPushButton::clicked, [=]() {
+        int ret = controller->saveMap(Map_name->displayText().toUtf8().constData());
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("Caution");
+
+        if(ret == 1)
+        {
+            msgBox.setText("Please insert map name.");
+        }
+        else if(ret == 2)
+        {
+            msgBox.setText("Map with this name already exists!");
+        }
+        else if(ret == 0)
+        {
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setWindowTitle("Information");
+            msgBox.setText("Map created successfuly.");
+        }
+
+        msgBox.exec();
+    });
+
+    
+    //Robot setup events
+    connect(Robot_name, static_cast<void(QLineEdit::*)(const QString &)>(&QLineEdit::textChanged), [=](const QString &text) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setRobotName(text.toStdString());
+        }
+    });
+
+    connect(direction_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setRotation(value);
+        }
+    });
+
+    connect(distance_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setDistance(value);
+        }
+    });
+
+    connect(direction_type, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setDirection(index==0?LEFT:RIGHT);
+        }
+    });
+
+    robotSelectGUI(false);
+    view->setMode(CustomGraphicsView::RecordClicks);
 }
 
 void PageCreate::handleMouseClick(int x, int y){
     std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-    controller->addRobot(x, y);
-    controller->spawnTopmostRobot();
+    if(current_cursor_state == cursor_state::SPAWN_ROBOT){
+        controller->addRobot(x, y);
+        controller->spawnTopmostRobot();
+        controller->selectRobot(x,y);
+        robotSelectGUI(true);
+    }
+    else if(current_cursor_state == cursor_state::SPAWN_BOX)
+    {
+        controller->addBox(x, y);
+        controller->spawnTopmostBox();
+    }
+    else if(current_cursor_state == cursor_state::REMOVE_ITEM)
+    {
+        controller->removeItem(x, y);
+        if(controller->getSelectedRobot() == nullptr)robotSelectGUI(false);
+    }
+    else
+    {
+        int ret = controller->selectRobot(x,y);
+        if(ret == 1)
+        {
+            robotSelectGUI(true);
+        }
+        else if(ret == 2)
+        {
+            robotSelectGUI(false);
+        }
+    }
 }
 
 void PageCreate::startRecordingClicks()
@@ -116,7 +249,39 @@ void PageCreate::startRecordingClicks()
         //making the cursor robot
         QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor); 
-        view->setMode(CustomGraphicsView::RecordClicks);
+        //view->setMode(CustomGraphicsView::RecordClicks);
+    }
+    else if(current_cursor_state == cursor_state::SPAWN_BOX)
+    {
+        QPixmap pixmap(":assets/Box.png");
+        //adding transparency to the pixmap
+        QPixmap transparentPixmap(pixmap.size());
+        transparentPixmap.fill(Qt::transparent); 
+        //setting the opacity of the pixmap
+        QPainter painter(&transparentPixmap);
+        painter.setOpacity(0.5); 
+        painter.drawPixmap(0, 0, pixmap); 
+        painter.end();
+        //making the cursor robot
+        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        view->viewport()->setCursor(cursor);
+        //view->setMode(CustomGraphicsView::RecordClicks);        
+    }
+    else if(current_cursor_state == cursor_state::REMOVE_ITEM)
+    {
+        QPixmap pixmap(":assets/remove.png");
+        //adding transparency to the pixmap
+        QPixmap transparentPixmap(pixmap.size());
+        transparentPixmap.fill(Qt::transparent); 
+        //setting the opacity of the pixmap
+        QPainter painter(&transparentPixmap);
+        painter.setOpacity(0.5); 
+        painter.drawPixmap(0, 0, pixmap); 
+        painter.end();
+        //making the cursor robot
+        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        view->viewport()->setCursor(cursor);
+        //view->setMode(CustomGraphicsView::RecordClicks);    
     }
 }
 
@@ -124,7 +289,7 @@ void PageCreate::startRecordingClicks()
 void PageCreate::stopRecordingClicks()
 {
     view->viewport()->setCursor(Qt::ArrowCursor);
-    view->setMode(CustomGraphicsView::Normal);
+    //view->setMode(CustomGraphicsView::Normal);
 }
 
 void PageCreate::showEvent(QShowEvent *event) {
@@ -172,4 +337,30 @@ void PageCreate::showEvent(QShowEvent *event) {
     }
 
     QWidget::showEvent(event);
+}
+
+void PageCreate::robotSelectGUI(bool toggle)
+{
+    if(toggle)
+    {
+        Robot_name->setEnabled(true);
+        direction_num->setEnabled(true);
+        distance_num->setEnabled(true);
+        direction_type->setEnabled(true);
+
+        //load data to widgets
+        Robot *robot = this->controller->getSelectedRobot();
+        Robot_name->setText(QString::fromStdString(robot->getRobotName()));
+        direction_num->setValue(robot->getRotation());
+        distance_num->setValue(robot->getDistance());
+        direction_type->setCurrentIndex(robot->getDirection()==LEFT?0:1);
+
+    }
+    else
+    {
+        Robot_name->setEnabled(false);
+        direction_num->setEnabled(false);
+        distance_num->setEnabled(false);
+        direction_type->setEnabled(false);
+    }
 }

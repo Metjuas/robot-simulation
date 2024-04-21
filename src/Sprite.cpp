@@ -19,3 +19,15 @@ Sprite::Sprite(const QString &filePath, QGraphicsItem *parent, unsigned int posX
         setPos(posX, posY);
     }
 }
+
+void Sprite::changeImage(const QString &filePath)
+{
+    QPixmap pixmap(filePath);
+    if(pixmap.isNull()) {
+        // debug prints
+        qDebug() << "Current directory:" << QDir::currentPath();
+        qDebug() << "Image path:" << QDir::currentPath() + filePath;
+    } else {
+        setPixmap(pixmap);
+    }
+}
