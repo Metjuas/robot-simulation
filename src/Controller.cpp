@@ -5,6 +5,8 @@
 #define ROBOT_SPRITE_WIDTH 64
 
 Controller::Controller() {
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Controller::simulateAll);
 }
 
 Controller::~Controller() {
@@ -29,7 +31,21 @@ void Controller::addRobot(int x, int y){
     robots.push_back(new Robot(x, y));
 }
 
+void Controller::startSimulation(){
+    timer->start(20);
+    robots.back()->simulate(&scene);
+}
+void Controller::stopSimulation(){
+    timer->stop();
 
+}
+
+void Controller::simulateAll() {
+    // for (Robot* robot : robots) {
+    //     robot->simulate(&scene);
+    // }
+    robots.back()->simulate(&scene);
+}
 
 void Controller::spawnTopmostRobot(){
     robots.back()->spawn(&scene);

@@ -15,17 +15,20 @@
 #include "Robot.hpp"
 #include <iostream>
 #include <QPointer>
+#include <QShowEvent>
 
 
 class PageSim : public QWidget
 {
     Q_OBJECT;
     public:
-    PageSim(QWidget *parent = nullptr, Controller *controller = nullptr);
-    ~PageSim();
-  
+        PageSim(QWidget *parent = nullptr, Controller *controller = nullptr);
+        ~PageSim();
+
     private:
-    QTimer *timer;
-    QGraphicsView *view;
+        QGraphicsView *view;
+        Controller *controller;
+    protected:
+        void showEvent(QShowEvent *event) override;
 
 };

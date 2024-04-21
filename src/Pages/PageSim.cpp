@@ -1,16 +1,13 @@
 #include "PageSim.hpp"
 #include <iostream>
+#define TickRate 2
 
 PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
 
     // view.setRenderHint(QPainter::Antialiasing);
+    this->controller = controller;
     view = new QGraphicsView(&controller->scene, nullptr);
-    const int TickRate = 2;
-
-    timer = new QTimer(this);
     
-    timer->start(TickRate);
-
     QPushButton *pause_button = new QPushButton("Pause simulation", this);
     pause_button->setFixedHeight(50);
     QPushButton *menu_button = new QPushButton("Menu", this);
@@ -21,12 +18,20 @@ PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
     //button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     connect(pause_button, &QPushButton::clicked, [=]() {
-        if (timer->isActive()) {
-            timer->stop();
+        // if (timer->isActive()) {
+        //     timer->stop();
+        //     pause_button->setText("Resume");
+        // } else {
+        //     timer->start(TickRate);
+        //     pause_button->setText("Pause");
+        // }
+        if(controller->timer->isActive()){
+            controller->stopSimulation();
             pause_button->setText("Resume");
-        } else {
-            timer->start(TickRate);
-            pause_button->setText("Pause");
+        }
+        else{
+            controller->startSimulation();
+            pause_button->setText("Pause simulation");
         }
     });
 
@@ -43,12 +48,16 @@ PageSim::PageSim(QWidget *parent, Controller *controller) : QWidget(parent){
     vLayout->addLayout(gridLayout);
 
     this->setLayout(vLayout);
+
+
+}
+
+void PageSim::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
+    // Start the simulation
+    controller->startSimulation();
 }
 
 PageSim::~PageSim() {
-    if(timer){
-        timer->stop();
-        delete timer;
-        timer = nullptr;
-    }   
+
 }
