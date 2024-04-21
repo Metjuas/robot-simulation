@@ -8,7 +8,7 @@ Robot::Robot(int posX, int posY) {
     this->posX = posX;
     this->posY = posY;
     this->robotName = "robot";
-    this->rotationAngle = 60;
+    this->rotationAngle = 0;
     this->distance = 50;
     this->direction = LEFT;
 }
@@ -135,5 +135,17 @@ void Robot::unselect()
     if(this->sprite != nullptr)
     {
         this->sprite->changeImage(":assets/RobotEnemy.png");
+    }
+}
+
+void Robot::setSpriteRotation()
+{
+    if(direction == LEFT)
+    {
+        this->sprite->setRotation(-this->rotationAngle);
+    }
+    else
+    {
+        this->sprite->setRotation(this->rotationAngle);
     }
 }
