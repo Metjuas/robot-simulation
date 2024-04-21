@@ -52,6 +52,8 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     Robot_name = new QLineEdit;
     direction_num = new QSpinBox();
     direction_num->setPrefix("Direction:");
+    direction_num->setMinimum(0);
+    direction_num->setMaximum(360);
     distance_num = new QSpinBox();
     distance_num->setPrefix("Distance:");
     direction_type = new QComboBox();

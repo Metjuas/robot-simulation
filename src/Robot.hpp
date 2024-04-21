@@ -33,8 +33,9 @@ class Robot: public QObject{
         //setters
         void setRobotName(std::string name) { this->robotName = name; }
         void setDistance(int distance) { this->distance = distance; }
-        void setDirection(RotationDirection direction) { this->direction = direction; }
-        void setRotation(int rotation) { this->rotationAngle = rotation; }
+        void setDirection(RotationDirection direction) { this->direction = direction; setSpriteRotation();}
+        void setRotation(int rotation) { this->rotationAngle = rotation; setSpriteRotation();}
+        void setSpriteRotation();
 
         std::string getSaveString();
         void select();
