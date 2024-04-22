@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <cmath>
+#include <iostream>
+#include <QTimer>
+#include <tuple>
+
 
 enum RotationDirection{
     LEFT,
@@ -20,7 +24,7 @@ class Robot: public QObject{
         void despawn(QGraphicsScene* scene);
         void move();
         void rotate();
-        std::pair<QList<QGraphicsItem*>, QList<QGraphicsItem*>> detectCollision(QGraphicsScene* scene);
+        std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> detectCollision(QGraphicsScene* scene);
 
         //getters
         int getPosX() { return posX; }

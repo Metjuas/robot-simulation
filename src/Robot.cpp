@@ -1,6 +1,5 @@
 #include "Robot.hpp"
-#include <iostream>
-#include <QTimer>
+
 
 #define SPAWN_OFFSET 0
 
@@ -35,21 +34,18 @@ Robot::~Robot() {
 void Robot::simulate(QGraphicsScene *scene) {
     QList<QGraphicsItem*> itemsInFront;
     QList<QGraphicsItem*> itemsOnRobot;
-    std::tie(itemsInFront, itemsOnRobot) = detectCollision(scene);
+    bool outOfBounds;
+    std::tie(itemsInFront, itemsOnRobot, outOfBounds) = detectCollision(scene);
 
-
-
-    if(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty())){
+    if(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds)){
     //if there is a collision, start rotating the robot
-    is_rotating = true;
-    rotation_checker = 15;
+        is_rotating = true;
+        rotation_checker = 15;
     }   
 
     if(!itemsOnRobot.empty()){
         collision = true;
     }
-
-
 
     if(is_rotating){
         rotate();
@@ -107,7 +103,7 @@ void Robot::move() {
 
 
 
-std::pair<QList<QGraphicsItem*>, QList<QGraphicsItem*>> Robot::detectCollision(QGraphicsScene* scene) {
+std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectCollision(QGraphicsScene* scene) {
     qreal radius = sprite->boundingRect().width() / 2.0;
     qreal detectionDistance = 25;
 
@@ -119,11 +115,16 @@ std::pair<QList<QGraphicsItem*>, QList<QGraphicsItem*>> Robot::detectCollision(Q
 
     QList<QGraphicsItem*> itemsInFront = scene->items(detectionRect);
     QList<QGraphicsItem*> itemsOnRobot = sprite->collidingItems();
+    bool outOfBounds = false;
 
+    QRectF map_rectangle(scene->sceneRect().topLeft(),scene->sceneRect().bottomRight());
 
+    if(!map_rectangle.contains(detectionRect)){
+        outOfBounds = true;
+    }
     // itemsOnRobot.removeAll(sprite);
 
-    return std::make_pair(itemsInFront, itemsOnRobot);
+    return std::make_tuple(itemsInFront, itemsOnRobot, outOfBounds);
 }
 
 void Robot::setSpriteRotation()

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <QRectF>
 
 class Controller : public QObject{
     public:
@@ -18,6 +19,7 @@ class Controller : public QObject{
         int map_height;
         int map_width;
         QGraphicsScene scene;
+        QRectF map_rectangle;
         void addRobot(int x, int y);
         void addRobot(std::string input);
         void spawnTopmostRobot();
