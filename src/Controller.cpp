@@ -34,7 +34,7 @@ void Controller::clearAll(){
 }
 
 
-void Controller::addRobot(int x, int y){
+bool Controller::addRobot(int x, int y){
     //this might need some changes
     QRect newRobotRect(x, y, 50, 50); 
 
@@ -42,11 +42,23 @@ void Controller::addRobot(int x, int y){
         QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
 
         if (newRobotRect.intersects(existingRobotRect)) {
-            return;
+            return false;
         }
     }
-    // The new robot does not overlap with any existing robots, so add it
+
+    for (Box* box : boxes) {
+        if (box != nullptr) {
+            QRect existingBoxRect(box->getPosX(), box->getPosY(), 50, 50); 
+
+            if (newRobotRect.intersects(existingBoxRect)) {
+                return false;
+            }
+        }
+    }
+
+    // The new robot does not overlap with any existing robots or boxes, so add it
     robots.push_back(new Robot(x, y));
+    return true;
 }
 
 void Controller::startSimulation(){
@@ -119,19 +131,29 @@ void Controller::spawnRobots(){
     // robots.clear();
 }
 
-void Controller::addBox(int x, int y){
+bool Controller::addBox(int x, int y){
     //this might need some changes
-    QRect newBoxRect(x, y, 64, 64); 
+      QRect newBoxRect(x, y, 64, 64); 
 
     for (Box* box : boxes) {
         QRect existingBoxRect(box->getPosX(), box->getPosY(), 64, 64); 
 
         if (newBoxRect.intersects(existingBoxRect)) {
-            return;
+            return false;
         }
     }
-    // The new robot does not overlap with any existing robots, so add it
+
+    for (Robot* robot : robots) {
+        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 64, 64); 
+
+        if (newBoxRect.intersects(existingRobotRect)) {
+            return false;
+        }
+    }
+
+    // The new box does not overlap with any existing boxes or robots, so add it
     boxes.push_back(new Box(x, y));
+    return true;
 }
 
 void Controller::addBox(std::string input)
@@ -314,6 +336,10 @@ int Controller::selectRobot(int x, int y)
     //check if clicked on robot 
     Robot *newselectedRobot = nullptr;
     for (Robot* robot : this->robots) {
+        if(robot == nullptr){
+            return 2;
+        }
+
         QRect existingRobotRect(robot->getPosX()-32, robot->getPosY()-32, 64, 64);
         if(existingRobotRect.contains(x,y))
         {

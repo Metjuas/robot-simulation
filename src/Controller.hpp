@@ -20,13 +20,13 @@ class Controller : public QObject{
         int map_width;
         QGraphicsScene scene;
         QRectF map_rectangle;
-        void addRobot(int x, int y);
+        bool addRobot(int x, int y);
         void addRobot(std::string input);
         void spawnTopmostRobot();
         void startSimulation();
         void stopSimulation();
         QTimer *timer;
-        void addBox(int x, int y);
+        bool addBox(int x, int y);
         void addBox(std::string input);
         void spawnTopmostBox();
         void removeItem(int x, int y);

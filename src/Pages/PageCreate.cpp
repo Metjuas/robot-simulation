@@ -215,15 +215,18 @@ void PageCreate::handleMouseClick(int x, int y){
         int adjustedX = std::max(robotWidth / 2, std::min(static_cast<int>(view->scene()->width()) - robotWidth / 2, x));
         int adjustedY = std::max(robotHeight / 2, std::min(static_cast<int>(view->scene()->height()) - robotHeight / 2, y));
 
-        controller->addRobot(adjustedX, adjustedY);
-        controller->spawnTopmostRobot();
-        controller->selectRobot(adjustedX, adjustedY);
-        robotSelectGUI(true);
+        if(controller->addRobot(adjustedX, adjustedY)){
+            controller->spawnTopmostRobot();
+            controller->selectRobot(adjustedX, adjustedY);
+            robotSelectGUI(true);
+        }
+
     }
     else if(current_cursor_state == cursor_state::SPAWN_BOX)
     {
-        controller->addBox(x, y);
-        controller->spawnTopmostBox();
+        if(controller->addBox(x, y)){
+            controller->spawnTopmostBox();
+        }
     }
     else if(current_cursor_state == cursor_state::REMOVE_ITEM)
     {
@@ -305,7 +308,6 @@ void PageCreate::stopRecordingClicks()
 void PageCreate::showEvent(QShowEvent *event) {
     if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
         
-
         QDialog dialog(this);
         dialog.setWindowTitle("Set the size");
         QFormLayout form(&dialog);
