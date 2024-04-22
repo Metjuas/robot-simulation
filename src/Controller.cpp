@@ -95,7 +95,14 @@ void Controller::addRobot(std::string input)
 
 void Controller::simulateAll() {
     for (Robot* robot : robots) {
-        robot->simulate(&scene);
+        if(this->selectedRobot != robot)
+        {
+            robot->simulate(&scene);
+        }
+        else
+        {
+            robot->playerControl();
+        }
     }
     // robots.back()->simulate(&scene);
 }

@@ -96,6 +96,9 @@ void Robot::move() {
 
         double newX = sprite->x() + cos(rotation);
         double newY = sprite->y() + sin(rotation);
+        //std::cout << "x: " << (int)newX << " y: " << (int)newY << "\n";
+        this->posX = (int)newX;
+        this->posY = (int)newY;
 
         sprite->setPos(newX, newY);
     }
@@ -127,18 +130,11 @@ std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectColl
     return std::make_tuple(itemsInFront, itemsOnRobot, outOfBounds);
 }
 
-void Robot::setSpriteRotation()
-{
-    if(direction == LEFT)
-    {
-        this->sprite->setRotation(-this->rotationAngle);
-    }
-    else
-    {
-        this->sprite->setRotation(this->rotationAngle);
-    }
-}
 
+bool Robot::playerDetectCollision(QGraphicsScene* scene)
+{
+
+}
 
 std::string Robot::getSaveString()
 {
@@ -169,5 +165,33 @@ void Robot::unselect()
     if(this->sprite != nullptr)
     {
         this->sprite->changeImage(":assets/RobotEnemy.png");
+    }
+}
+
+void Robot::setSpriteRotation()
+{
+    if(direction == LEFT)
+    {
+        this->sprite->setRotation(-this->rotationAngle);
+    }
+    else
+    {
+        this->sprite->setRotation(this->rotationAngle);
+    }
+}
+
+void Robot::playerControl()
+{
+    if(this->playerLeft)
+    {
+        sprite->setRotation(sprite->rotation() - 1);
+    }
+    else if(this->playerRight)
+    {
+        sprite->setRotation(sprite->rotation() + 1);
+    }
+    else if(this->playerGo)
+    {
+        move();
     }
 }

@@ -17,22 +17,28 @@
 #include <iostream>
 #include <QPointer>
 #include <QShowEvent>
+#include "CustomGraphicsView.hpp"
 
 
 class PageSim : public QWidget
 {
-    Q_OBJECT;
+    Q_OBJECT
     public:
     PageSim(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
     ~PageSim();
         
     protected:
     void showEvent(QShowEvent *event) override;
-  
+
+    private slots:
+        void handleMouseClick(int x, int y);
+
     private:
+    bool robotSelectGUI(bool toggle);
+
     QStackedWidget *m_stackedWidget;
     QTimer *timer;
-    QGraphicsView *view;
+    CustomGraphicsView *view;
     Controller *controller;
 
 };
