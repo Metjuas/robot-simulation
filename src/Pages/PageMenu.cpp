@@ -63,6 +63,16 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *c
     });
 
     connect(start_button, &QPushButton::clicked, [=]() {
+
+        if(this->controller->map_width == 0 || this->controller->map_height == 0)
+        {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setWindowTitle("Caution");
+            msgBox.setText("Please create or select a map first.");
+            msgBox.exec();
+            return;
+        }
         parent->resize(this->controller->map_width,this->controller->map_height);
         stackedWidget->setCurrentIndex(1);
     });

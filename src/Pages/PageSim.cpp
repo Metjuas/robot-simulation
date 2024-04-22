@@ -20,18 +20,13 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
     //pause button Click
     connect(menu_button, &QPushButton::clicked, [=]() {
         parent->resize(300,500);
+        controller->clearAll();
         stackedWidget->setCurrentIndex(0);
     });
 
     //menu button Click
     connect(pause_button, &QPushButton::clicked, [=]() {
-        // if (timer->isActive()) {
-        //     timer->stop();
-        //     pause_button->setText("Resume");
-        // } else {
-        //     timer->start(TickRate);
-        //     pause_button->setText("Pause");
-        // }
+
         if(controller->timer->isActive()){
             controller->stopSimulation();
             pause_button->setText("Resume");

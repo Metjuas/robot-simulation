@@ -35,6 +35,8 @@ class Controller : public QObject{
         int selectRobot(int x, int y);
         void unselectRobot();
 
+        void clearAll();
+
     public slots:
         void simulateAll();
         

@@ -19,6 +19,21 @@ Controller::~Controller() {
     }
 }
 
+void Controller::clearAll(){
+    for (Robot* robot : robots) {
+        delete robot;
+    }
+    for (Box* box : boxes) {
+
+    }
+    robots.clear();
+    boxes.clear();
+    this->selectedRobot = nullptr;
+    this->scene.clear();
+    this->timer->stop();
+}
+
+
 void Controller::addRobot(int x, int y){
     //this might need some changes
     QRect newRobotRect(x, y, 50, 50); 
@@ -35,9 +50,12 @@ void Controller::addRobot(int x, int y){
 }
 
 void Controller::startSimulation(){
-    timer->start(20);
-    robots.back()->simulate(&scene);
+    timer->start(10);
+    for (Robot* robot : robots) {
+        robot->simulate(&scene);
+    }
 }
+
 void Controller::stopSimulation(){
     timer->stop();
 }

@@ -1,5 +1,6 @@
 #include "Robot.hpp"
 #include <iostream>
+#include <QTimer>
 
 #define SPAWN_OFFSET 0
 
@@ -32,18 +33,47 @@ Robot::~Robot() {
 }  
 
 void Robot::simulate(QGraphicsScene *scene) {
-    if(detectCollision(scene)){
-        rotation_checker = 50;
-        is_rotating = true;
+    QList<QGraphicsItem*> itemsInFront;
+    QList<QGraphicsItem*> itemsOnRobot;
+    std::tie(itemsInFront, itemsOnRobot) = detectCollision(scene);
+
+
+
+    if(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty())){
+    //if there is a collision, start rotating the robot
+    is_rotating = true;
+    rotation_checker = 15;
+    }   
+
+    if(!itemsOnRobot.empty()){
+        collision = true;
     }
+
+
+
     if(is_rotating){
         rotate();
-    }
-    else{
+        if(is_rotating == false && itemsInFront.empty()){
+            std::cout << "hey\n";
+
+            move();
+        }
+    } else {
         move();
     }
 }
 
+
+void Robot::rotate() {
+    if (sprite && rotation_checker > 0) {
+        // Set the point of rotation to the center of the sprite
+        sprite->setRotation(sprite->rotation() + 1);
+        rotation_checker--;
+        if (rotation_checker == 0) {
+            is_rotating = false;
+        }
+    }
+}
 
 void Robot::spawn(QGraphicsScene* scene) {
     //create a new sprite and add it to the scene
@@ -75,20 +105,11 @@ void Robot::move() {
     }
 }
 
-void Robot::rotate() {
-    if (sprite && rotation_checker > 0) {
-        // Set the point of rotation to the center of the sprite
-        sprite->setRotation(sprite->rotation() + 1);
-        rotation_checker--;
-        if (rotation_checker == 0) {
-            is_rotating = false;
-        }
-    }
-}
 
-bool Robot::detectCollision(QGraphicsScene* scene) {
+
+std::pair<QList<QGraphicsItem*>, QList<QGraphicsItem*>> Robot::detectCollision(QGraphicsScene* scene) {
     qreal radius = sprite->boundingRect().width() / 2.0;
-    qreal detectionDistance = 30.0;
+    qreal detectionDistance = 25;
 
     // Calculate the center of the detection rectangle
     qreal centerX = sprite->pos().x() + radius + cos(sprite->rotation() * M_PI / 180.0) * (radius + detectionDistance);
@@ -99,15 +120,24 @@ bool Robot::detectCollision(QGraphicsScene* scene) {
     QList<QGraphicsItem*> itemsInFront = scene->items(detectionRect);
     QList<QGraphicsItem*> itemsOnRobot = sprite->collidingItems();
 
-    //this might need to be here
+
     // itemsOnRobot.removeAll(sprite);
 
-    if (!itemsInFront.isEmpty() ||  !itemsOnRobot.isEmpty()) {
-        qDebug() << "Hello";
-        return true;
-    }
-    return false;
+    return std::make_pair(itemsInFront, itemsOnRobot);
 }
+
+void Robot::setSpriteRotation()
+{
+    if(direction == LEFT)
+    {
+        this->sprite->setRotation(-this->rotationAngle);
+    }
+    else
+    {
+        this->sprite->setRotation(this->rotationAngle);
+    }
+}
+
 
 std::string Robot::getSaveString()
 {
@@ -138,17 +168,5 @@ void Robot::unselect()
     if(this->sprite != nullptr)
     {
         this->sprite->changeImage(":assets/RobotEnemy.png");
-    }
-}
-
-void Robot::setSpriteRotation()
-{
-    if(direction == LEFT)
-    {
-        this->sprite->setRotation(-this->rotationAngle);
-    }
-    else
-    {
-        this->sprite->setRotation(this->rotationAngle);
     }
 }

@@ -20,7 +20,8 @@ class Robot: public QObject{
         void despawn(QGraphicsScene* scene);
         void move();
         void rotate();
-        bool detectCollision(QGraphicsScene* scene);
+        std::pair<QList<QGraphicsItem*>, QList<QGraphicsItem*>> detectCollision(QGraphicsScene* scene);
+
         //getters
         int getPosX() { return posX; }
         int getPosY() { return posY; }
@@ -36,7 +37,6 @@ class Robot: public QObject{
         void setDirection(RotationDirection direction) { this->direction = direction; setSpriteRotation();}
         void setRotation(int rotation) { this->rotationAngle = rotation; setSpriteRotation();}
         void setSpriteRotation();
-
         std::string getSaveString();
         void select();
         void unselect();
@@ -47,9 +47,9 @@ class Robot: public QObject{
         std::string robotName;
         RotationDirection direction;
         int rotationAngle;
-
         Sprite *sprite = nullptr;
         bool is_rotating = false;
         int rotation_checker = 0;
+        bool collision = false;
 };
             
