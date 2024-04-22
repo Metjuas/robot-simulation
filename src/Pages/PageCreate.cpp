@@ -1,7 +1,6 @@
 
 #include "PageCreate.hpp"
 #include <iostream>
-#include <QMouseEvent>
 #define SCENE_OFFSET 0
 
 
@@ -204,12 +203,21 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     view->setMode(CustomGraphicsView::RecordClicks);
 }
 
+
+
 void PageCreate::handleMouseClick(int x, int y){
     std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-    if(current_cursor_state == cursor_state::SPAWN_ROBOT){
-        controller->addRobot(x, y);
+     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
+        //robot size
+        int robotWidth = 64; 
+        int robotHeight = 64;
+
+        int adjustedX = std::max(robotWidth / 2, std::min(static_cast<int>(view->scene()->width()) - robotWidth / 2, x));
+        int adjustedY = std::max(robotHeight / 2, std::min(static_cast<int>(view->scene()->height()) - robotHeight / 2, y));
+
+        controller->addRobot(adjustedX, adjustedY);
         controller->spawnTopmostRobot();
-        controller->selectRobot(x,y);
+        controller->selectRobot(adjustedX, adjustedY);
         robotSelectGUI(true);
     }
     else if(current_cursor_state == cursor_state::SPAWN_BOX)
@@ -321,17 +329,18 @@ void PageCreate::showEvent(QShowEvent *event) {
         connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
         // if the user accepts the dialog, it goes to the next page
-        if (dialog.exec() == QDialog::Accepted) {
+       if (dialog.exec() == QDialog::Accepted) {
             if(controller){
                 controller->map_height = spinBox1->value();
                 controller->map_width = spinBox2->value();
                 if(view){
-                view->setFixedSize(controller->map_width + SCENE_OFFSET, controller->map_height + SCENE_OFFSET);
-                controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
-        }
+                    view->setFixedSize(controller->map_width, controller->map_height);
+                    controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
+                    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                }
             }
-            // resize( controller->map_width, controller->map_height);
-        }    
+        }
         // in case the user cancels the dialog, it goes back to the main page
         else {
             m_stackedWidget->setCurrentIndex(0);

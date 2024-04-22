@@ -50,8 +50,6 @@ void Robot::simulate(QGraphicsScene *scene) {
     if(is_rotating){
         rotate();
         if(is_rotating == false && itemsInFront.empty()){
-            std::cout << "hey\n";
-
             move();
         }
     } else {
@@ -122,7 +120,6 @@ std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectColl
     if(!map_rectangle.contains(detectionRect)){
         outOfBounds = true;
     }
-    // itemsOnRobot.removeAll(sprite);
 
     return std::make_tuple(itemsInFront, itemsOnRobot, outOfBounds);
 }

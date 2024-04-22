@@ -18,6 +18,7 @@
 #include <QPointer>
 #include <QShowEvent>
 
+#include "CustomGraphicsView.hpp"
 
 class PageSim : public QWidget
 {
@@ -32,7 +33,8 @@ class PageSim : public QWidget
     private:
     QStackedWidget *m_stackedWidget;
     QTimer *timer;
-    QGraphicsView *view;
+    CustomGraphicsView* view;
+
     Controller *controller;
 
 };

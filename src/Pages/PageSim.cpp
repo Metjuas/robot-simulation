@@ -6,7 +6,8 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
 
     // view.setRenderHint(QPainter::Antialiasing);
     this->controller = controller;
-    view = new QGraphicsView(&controller->scene, nullptr);
+    view = new CustomGraphicsView(&controller->scene, nullptr);
+
     
     QPushButton *pause_button = new QPushButton("Pause simulation", this);
     pause_button->setFixedHeight(50);
@@ -56,6 +57,10 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
 
 void PageSim::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
+
+    view->setFixedSize(controller->map_width, controller->map_height);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Start the simulation
     controller->startSimulation();
 }

@@ -21,7 +21,11 @@ public:
     void setMode(Mode mode) { this->mode = mode; }
 
     std::pair<int, int> getLastClickPosition() const { return last_click_pos; }
-    
+    void resizeEvent(QResizeEvent *event)
+    {
+        fitInView(sceneRect(), Qt::KeepAspectRatio);
+        QGraphicsView::resizeEvent(event);
+    }
 signals:
     void mouseClick(int x, int y);
 protected:
