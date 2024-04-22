@@ -25,9 +25,6 @@ class Robot: public QObject{
         void move();
         void rotate();
         std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> detectCollision(QGraphicsScene* scene);
-
-        bool detectCollision(QGraphicsScene* scene);
-        bool playerDetectCollision(QGraphicsScene* scene);
         //getters
         int getPosX() { return posX; }
         int getPosY() { return posY; }
@@ -46,7 +43,7 @@ class Robot: public QObject{
         std::string getSaveString();
         void select();
         void unselect();
-        void playerControl();
+        void playerControl(QGraphicsScene *scene);
 
         bool playerGo = false;
         bool playerLeft = false;

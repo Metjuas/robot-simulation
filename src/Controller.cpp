@@ -101,7 +101,7 @@ void Controller::simulateAll() {
         }
         else
         {
-            robot->playerControl();
+            robot->playerControl(&scene);
         }
     }
     // robots.back()->simulate(&scene);

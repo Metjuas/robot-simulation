@@ -125,15 +125,9 @@ std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectColl
     if(!map_rectangle.contains(detectionRect)){
         outOfBounds = true;
     }
-    // itemsOnRobot.removeAll(sprite);
+    itemsOnRobot.removeAll(sprite);
 
     return std::make_tuple(itemsInFront, itemsOnRobot, outOfBounds);
-}
-
-
-bool Robot::playerDetectCollision(QGraphicsScene* scene)
-{
-
 }
 
 std::string Robot::getSaveString()
@@ -180,7 +174,7 @@ void Robot::setSpriteRotation()
     }
 }
 
-void Robot::playerControl()
+void Robot::playerControl(QGraphicsScene *scene)
 {
     if(this->playerLeft)
     {
@@ -192,6 +186,13 @@ void Robot::playerControl()
     }
     else if(this->playerGo)
     {
-        move();
+        QList<QGraphicsItem*> itemsInFront;
+        QList<QGraphicsItem*> itemsOnRobot;
+        bool outOfBounds;
+        std::tie(itemsInFront, itemsOnRobot, outOfBounds) = detectCollision(scene);
+
+        if(!(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds))){
+            move();
+        }
     }
 }
