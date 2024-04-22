@@ -19,6 +19,7 @@
 #include <QShowEvent>
 #include "CustomGraphicsView.hpp"
 
+#include "CustomGraphicsView.hpp"
 
 class PageSim : public QWidget
 {

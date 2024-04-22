@@ -108,6 +108,10 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
 
 void PageSim::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
+
+    view->setFixedSize(controller->map_width, controller->map_height);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Start the simulation
     controller->startSimulation();
 }
