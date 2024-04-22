@@ -11,10 +11,10 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
     pause_button->setFixedHeight(50);
     QPushButton *menu_button = new QPushButton("Menu", this);
     menu_button->setFixedHeight(50);
-    QPushButton *go_button = new QPushButton("Go", this);
+    go_button = new QPushButton("Go", this);
     go_button->setCheckable(true);
-    QPushButton *left_button = new QPushButton("<-", this);
-    QPushButton *right_button = new QPushButton("->", this);
+    left_button = new QPushButton("<-", this);
+    right_button = new QPushButton("->", this);
     //button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     //pause button Click
@@ -41,7 +41,7 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
 
     //Robot control buttons
     //go button Click
-    connect(go_button, &QPushButton::toggled, [this, go_button, controller](bool checked) {
+    connect(go_button, &QPushButton::toggled, [this, controller](bool checked) {
         if(controller->getSelectedRobot() != nullptr)
         {
             if(checked)
@@ -122,7 +122,24 @@ PageSim::~PageSim() {
 
 bool PageSim::robotSelectGUI(bool toggle)
 {
+    if(this->controller->getSelectedRobot() != nullptr)
+    {
+        go_button->setText(QString::fromStdString("Go"));
+    }
+    go_button->setChecked(false);
 
+    if(toggle)
+    {
+        go_button->setEnabled(true);
+        left_button->setEnabled(true);
+        right_button->setEnabled(true);
+    }
+    else
+    {
+        go_button->setEnabled(false);
+        left_button->setEnabled(false);
+        right_button->setEnabled(false);
+    }
 }
 
 void PageSim::handleMouseClick(int x, int y){

@@ -42,4 +42,9 @@ class PageSim : public QWidget
     CustomGraphicsView *view;
     Controller *controller;
 
+    //robot controll Widgets
+    QPushButton *go_button;
+    QPushButton *left_button;
+    QPushButton *right_button;
+
 };

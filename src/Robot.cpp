@@ -189,7 +189,7 @@ void Robot::playerControl(QGraphicsScene *scene)
         bool outOfBounds;
         std::tie(itemsInFront, itemsOnRobot, outOfBounds) = detectCollision(scene);
 
-        if(!(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds))){
+        if(!(!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds)){
             move();
         }
     }
