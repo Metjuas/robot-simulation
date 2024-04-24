@@ -15,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     stackedWidget->addWidget(pageCreate.get());
     setCentralWidget(stackedWidget);
 
-    resize(300, 500);
+    connect(stackedWidget, &QStackedWidget::currentChanged, [=](int index) {
+        adjustSize();
+    });
+
 }
 #include <iostream>
 

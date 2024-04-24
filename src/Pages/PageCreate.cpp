@@ -61,7 +61,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
 
     //add widgets and set layouts    
-    QHBoxLayout *toolBarLayout = new QHBoxLayout();
+    toolBarLayout = new QHBoxLayout();
     toolBarLayout->addWidget(box_button);
     toolBarLayout->addWidget(Robot_button);  
     toolBarLayout->addWidget(trash_button);
@@ -76,10 +76,8 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     dataSetLayout->addWidget(direction_type);
 
 
-    QGridLayout *mainLayout = new QGridLayout();
-    mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
-    mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-    mainLayout->addWidget(view, 0, 0, 1, 1);
+    mainLayout = new QGridLayout();
+
 
     this->setLayout(mainLayout);
 
@@ -140,7 +138,7 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
     connect(ok_button, &QPushButton::clicked, [=]() {
         controller->unselectRobot();
-        parent->resize(300,500);
+        //parent->resize(300,500);
         stackedWidget->setCurrentIndex(0);
     });
 
@@ -350,6 +348,19 @@ void PageCreate::showEvent(QShowEvent *event) {
     }
 
     QWidget::showEvent(event);
+
+    //add widgets to page
+    mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
+    mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
+    mainLayout->addWidget(view, 0, 0, 1, 1);
+}
+
+void PageCreate::hideEvent(QHideEvent *event) {
+    QWidget::hideEvent(event);
+    
+    mainLayout->removeItem(toolBarLayout);
+    mainLayout->removeItem(dataSetLayout);
+    mainLayout->removeWidget(view);
 }
 
 void PageCreate::robotSelectGUI(bool toggle)

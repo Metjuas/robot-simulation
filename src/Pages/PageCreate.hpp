@@ -4,7 +4,6 @@
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QShowEvent>
 #include <QDebug>
 #include <QMessageBox>
 #include <QDialog>
@@ -13,7 +12,8 @@
 #include <QDialogButtonBox>
 #include <QtWidgets>
 #include <QPixmap>
-
+#include <QShowEvent>
+#include <QHideEvent>
 
 #include <memory>
 
@@ -40,6 +40,7 @@ class PageCreate : public QWidget
         ~PageCreate();
     protected:
         void showEvent(QShowEvent *event) override;
+        void hideEvent(QHideEvent *event) override;
     private slots:
         void startRecordingClicks();
         void stopRecordingClicks();
@@ -47,14 +48,19 @@ class PageCreate : public QWidget
     private:
         void robotSelectGUI(bool toggle);
 
+        QGridLayout *mainLayout;
+        QHBoxLayout *toolBarLayout;
+        QVBoxLayout *dataSetLayout;
+        CustomGraphicsView* view;
+
         QStackedWidget *m_stackedWidget;
         Controller *controller;
-        CustomGraphicsView* view;
+        
         std::unique_ptr<Map> map;
         cursor_state current_cursor_state = cursor_state::IDLE;
 
 
-        QVBoxLayout *dataSetLayout;
+        
         //Robot setup widgets
         QLineEdit *Robot_name;
         QSpinBox *direction_num;

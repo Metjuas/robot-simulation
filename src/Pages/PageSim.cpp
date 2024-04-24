@@ -88,16 +88,21 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
 
 
     //setLayout
-    QGridLayout *gridLayout = new QGridLayout();
+    gridLayout = new QGridLayout();
+    gridLayout->columnMinimumWidth(10);
+    //gridLayout->maximumSize().setWidth(10);
+
+
     gridLayout->addWidget(pause_button, 0, 0, 2, 2);
     gridLayout->addWidget(menu_button, 0, 10, 2, 2);
     gridLayout->addWidget(go_button, 0, 4, 1, 2);
     gridLayout->addWidget(left_button, 1, 4);
     gridLayout->addWidget(right_button, 1, 5);
 
-    QVBoxLayout *vLayout = new QVBoxLayout();
-    vLayout->addWidget(view);
-    vLayout->addLayout(gridLayout);
+    vLayout = new QVBoxLayout();
+
+
+    
 
     
 
@@ -114,6 +119,16 @@ void PageSim::showEvent(QShowEvent *event) {
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Start the simulation
     controller->startSimulation();
+
+    vLayout->addWidget(view);
+    vLayout->addLayout(gridLayout);
+}
+
+void PageSim::hideEvent(QHideEvent *event) {
+    QWidget::hideEvent(event);
+
+    vLayout->removeWidget(view);
+    vLayout->removeItem(gridLayout);
 }
 
 PageSim::~PageSim() {

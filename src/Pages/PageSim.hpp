@@ -17,6 +17,7 @@
 #include <iostream>
 #include <QPointer>
 #include <QShowEvent>
+#include <QHideEvent>
 #include "CustomGraphicsView.hpp"
 
 #include "CustomGraphicsView.hpp"
@@ -30,6 +31,7 @@ class PageSim : public QWidget
         
     protected:
     void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event);
 
     private slots:
         void handleMouseClick(int x, int y);
@@ -37,9 +39,11 @@ class PageSim : public QWidget
     private:
     bool robotSelectGUI(bool toggle);
 
+    QVBoxLayout *vLayout;
     QStackedWidget *m_stackedWidget;
     QTimer *timer;
     CustomGraphicsView *view;
+    QGridLayout *gridLayout;
     Controller *controller;
 
     //robot controll Widgets

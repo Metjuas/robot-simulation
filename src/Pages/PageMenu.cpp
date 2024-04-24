@@ -7,7 +7,8 @@
 
 PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
     this->controller = controller;
-    parent->resize(300, 500);
+    //parent->resize(300, 500);
+    this->setFixedSize(300,500);
 
     //create widgets
     QPushButton *create_button = new QPushButton("create map", this);
