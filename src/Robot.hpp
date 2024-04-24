@@ -34,11 +34,13 @@ class Robot: public QObject{
         int getDistance() { return distance; }
         RotationDirection getDirection() { return direction; }
         int getRotation() { return rotationAngle; }
+        int getRobotRotation(){return robotRotation;}
         //setters
         void setRobotName(std::string name) { this->robotName = name; }
         void setDistance(int distance) { this->distance = distance; }
         void setDirection(RotationDirection direction) { this->direction = direction; setSpriteRotation();}
         void setRotation(int rotation) { this->rotationAngle = rotation; setSpriteRotation();}
+        void setRobotRotation(int rotation){this->robotRotation = rotation;}
         void setSpriteRotation();
         std::string getSaveString();
         void select();
@@ -59,5 +61,6 @@ class Robot: public QObject{
         bool is_rotating = false;
         int rotation_checker = 0;
         bool collision = false;
+        int robotRotation = 60;
 };
             

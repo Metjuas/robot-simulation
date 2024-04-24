@@ -59,11 +59,10 @@ class PageCreate : public QWidget
         std::unique_ptr<Map> map;
         cursor_state current_cursor_state = cursor_state::IDLE;
 
-
-        
         //Robot setup widgets
         QLineEdit *Robot_name;
         QSpinBox *direction_num;
         QSpinBox *distance_num;
+        QSpinBox *rotation_num;
         QComboBox *direction_type;
 };

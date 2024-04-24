@@ -56,6 +56,12 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     distance_num = new QSpinBox();
     distance_num->setPrefix("Distance:");
     direction_type = new QComboBox();
+
+    rotation_num = new QSpinBox();
+    rotation_num->setPrefix("Rotation angle: ");
+    rotation_num->setMinimum(0);
+    rotation_num->setMaximum(360);
+
     direction_type->addItem("left");
     direction_type->addItem("right");
 
@@ -73,6 +79,8 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     dataSetLayout->addWidget(Robot_name);
     dataSetLayout->addWidget(direction_num);
     dataSetLayout->addWidget(distance_num);
+    dataSetLayout->addWidget(rotation_num);
+
     dataSetLayout->addWidget(direction_type);
 
 
@@ -189,6 +197,13 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
             controller->getSelectedRobot()->setDistance(value);
         }
     });
+    connect(rotation_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
+        if(controller->getSelectedRobot() != nullptr)
+        {
+            controller->getSelectedRobot()->setRobotRotation(value);
+        }
+    });
+    
 
     connect(direction_type, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
         if(controller->getSelectedRobot() != nullptr)
@@ -371,13 +386,16 @@ void PageCreate::robotSelectGUI(bool toggle)
         direction_num->setEnabled(true);
         distance_num->setEnabled(true);
         direction_type->setEnabled(true);
+        rotation_num->setEnabled(true);
 
         //load data to widgets
         Robot *robot = this->controller->getSelectedRobot();
         Robot_name->setText(QString::fromStdString(robot->getRobotName()));
         direction_num->setValue(robot->getRotation());
         distance_num->setValue(robot->getDistance());
+        rotation_num->setValue(robot->getRobotRotation());
         direction_type->setCurrentIndex(robot->getDirection()==LEFT?0:1);
+
 
     }
     else
@@ -385,6 +403,7 @@ void PageCreate::robotSelectGUI(bool toggle)
         Robot_name->setEnabled(false);
         direction_num->setEnabled(false);
         distance_num->setEnabled(false);
+        rotation_num->setEnabled(false);
         direction_type->setEnabled(false);
     }
 }

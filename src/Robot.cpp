@@ -1,15 +1,15 @@
 #include "Robot.hpp"
 
-
 #define SPAWN_OFFSET 0
 
-Robot::Robot(int posX, int posY) {
-    
+Robot::Robot(int posX, int posY)
+{
+
     this->posX = posX;
     this->posY = posY;
     this->robotName = "robot";
     this->rotationAngle = 0;
-    this->distance = 50;
+    this->distance = 30;
     this->direction = LEFT;
 }
 
@@ -23,78 +23,104 @@ Robot::Robot(std::string name, int posX, int posY, int rotation, int distance, R
     this->direction = direction;
 }
 
-Robot::~Robot() {
-    //if the sprite exists, delete it
+Robot::~Robot()
+{
+    // if the sprite exists, delete it
 
-    if (sprite != nullptr) {
+    if (sprite != nullptr)
+    {
         delete sprite;
     }
-}  
+}
 
-void Robot::simulate(QGraphicsScene *scene) {
-    QList<QGraphicsItem*> itemsInFront;
-    QList<QGraphicsItem*> itemsOnRobot;
+void Robot::simulate(QGraphicsScene *scene)
+{
+    QList<QGraphicsItem *> itemsInFront;
+    QList<QGraphicsItem *> itemsOnRobot;
     bool outOfBounds;
     std::tie(itemsInFront, itemsOnRobot, outOfBounds) = detectCollision(scene);
 
-    if(!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds)){
-    //if there is a collision, start rotating the robot
+    if (!is_rotating && (!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds))
+    {
+        // if there is a collision, start rotating the robot
         is_rotating = true;
-        rotation_checker = 15;
-    }   
+        rotation_checker = robotRotation;
+    }
 
-    if(!itemsOnRobot.empty()){
+    if (!itemsOnRobot.empty())
+    {
         collision = true;
     }
 
-    if(is_rotating){
+    if (is_rotating)
+    {
         rotate();
-        if(is_rotating == false && itemsInFront.empty()){
+        if (is_rotating == false && itemsInFront.empty())
+        {
             move();
         }
-    } else {
+    }
+    else
+    {
         move();
     }
 }
 
-
-void Robot::rotate() {
-    if (sprite && rotation_checker > 0) {
-        // Set the point of rotation to the center of the sprite
-        sprite->setRotation(sprite->rotation() + 1);
-        rotation_checker--;
-        if (rotation_checker == 0) {
-            is_rotating = false;
+void Robot::rotate()
+{
+    if (sprite && rotation_checker > 0)
+    {
+        if (direction == RIGHT)
+        {
+            sprite->setRotation(sprite->rotation() + 1);
+            rotation_checker--;
+            if (rotation_checker == 0)
+            {
+                is_rotating = false;
+            }
+        }
+        else
+        {
+            sprite->setRotation(sprite->rotation() - 1);
+            rotation_checker--;
+            if (rotation_checker == 0)
+            {
+                is_rotating = false;
+            }
         }
     }
+    // Set the point of rotation to the center of the sprite
 }
 
-void Robot::spawn(QGraphicsScene* scene) {
-    //create a new sprite and add it to the scene
+void Robot::spawn(QGraphicsScene *scene)
+{
+    // create a new sprite and add it to the scene
     QImage image(":assets/RobotEnemy.png");
     int width = image.width();
     int height = image.height();
 
-    //there is a offset needed, because the sprite will spawn in the top left corner of the image
-    sprite = new Sprite(":assets/RobotEnemy.png", nullptr, this->posX-(width/2), this->posY-(height/2));
+    // there is a offset needed, because the sprite will spawn in the top left corner of the image
+    sprite = new Sprite(":assets/RobotEnemy.png", nullptr, this->posX - (width / 2), this->posY - (height / 2));
     sprite->setTransformOriginPoint(sprite->boundingRect().width() / 2.0, sprite->boundingRect().height() / 2.0);
-    
+
     scene->addItem(sprite);
 }
 
-void Robot::despawn(QGraphicsScene* scene)
+void Robot::despawn(QGraphicsScene *scene)
 {
     scene->removeItem(sprite);
 }
 
-void Robot::move() {
-    if (sprite) { 
-        //calculating new position based on current rotation
+void Robot::move()
+{
+    if (sprite)
+    {
+        // calculating new position based on current rotation
         double rotation = sprite->rotation() * M_PI / 180.0;
 
         double newX = sprite->x() + cos(rotation);
         double newY = sprite->y() + sin(rotation);
-        //std::cout << "x: " << (int)newX << " y: " << (int)newY << "\n";
+        // std::cout << "x: " << (int)newX << " y: " << (int)newY << "\n";
         this->posX = (int)newX;
         this->posY = (int)newY;
 
@@ -102,11 +128,10 @@ void Robot::move() {
     }
 }
 
-
-
-std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectCollision(QGraphicsScene* scene) {
+std::tuple<QList<QGraphicsItem *>, QList<QGraphicsItem *>, bool> Robot::detectCollision(QGraphicsScene *scene)
+{
     qreal radius = sprite->boundingRect().width() / 2.0;
-    qreal detectionDistance = 25;
+    qreal detectionDistance = distance;
 
     // Calculate the center of the detection rectangle
     qreal centerX = sprite->pos().x() + radius + cos(sprite->rotation() * M_PI / 180.0) * (radius + detectionDistance);
@@ -114,39 +139,38 @@ std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> Robot::detectColl
     // Create the detection rectangle
     QRectF detectionRect(centerX - detectionDistance / 2.0, centerY - detectionDistance / 2.0, detectionDistance, detectionDistance);
 
-    QList<QGraphicsItem*> itemsInFront = scene->items(detectionRect);
-    QList<QGraphicsItem*> itemsOnRobot = sprite->collidingItems();
+    QList<QGraphicsItem *> itemsInFront = scene->items(detectionRect);
+    QList<QGraphicsItem *> itemsOnRobot = sprite->collidingItems();
     bool outOfBounds = false;
 
-    QRectF map_rectangle(scene->sceneRect().topLeft(),scene->sceneRect().bottomRight());
+    QRectF map_rectangle(scene->sceneRect().topLeft(), scene->sceneRect().bottomRight());
 
-    if(!map_rectangle.contains(detectionRect)){
+    if (!map_rectangle.contains(detectionRect))
+    {
         outOfBounds = true;
     }
-    //itemsOnRobot.removeAll(sprite);
+    // itemsOnRobot.removeAll(sprite);
 
     return std::make_tuple(itemsInFront, itemsOnRobot, outOfBounds);
 }
 
 std::string Robot::getSaveString()
 {
-    std::string robotDirection = this->direction==LEFT ? "LEFT" : "RIGHT";
+    std::string robotDirection = this->direction == LEFT ? "LEFT" : "RIGHT";
 
-    std::string out =   "(" + 
-                        this->robotName + "," +
-                        std::to_string(this->posX) + "," +
-                        std::to_string(this->posY) + "," +
-                        std::to_string(this->distance) + "," +
-                        std::to_string(this->rotationAngle) + "," +
-                        robotDirection
-                        + ")";
+    std::string out = "(" +
+                      this->robotName + "," +
+                      std::to_string(this->posX) + "," +
+                      std::to_string(this->posY) + "," +
+                      std::to_string(this->distance) + "," +
+                      std::to_string(this->rotationAngle) + "," +
+                      robotDirection + ")";
     return out;
 }
 
-
 void Robot::select()
 {
-    if(this->sprite != nullptr)
+    if (this->sprite != nullptr)
     {
         this->sprite->changeImage(":assets/RobotAlly.png");
     }
@@ -154,7 +178,7 @@ void Robot::select()
 
 void Robot::unselect()
 {
-    if(this->sprite != nullptr)
+    if (this->sprite != nullptr)
     {
         this->sprite->changeImage(":assets/RobotEnemy.png");
     }
@@ -162,7 +186,7 @@ void Robot::unselect()
 
 void Robot::setSpriteRotation()
 {
-    if(direction == LEFT)
+    if (direction == LEFT)
     {
         this->sprite->setRotation(-this->rotationAngle);
     }
@@ -174,22 +198,23 @@ void Robot::setSpriteRotation()
 
 void Robot::playerControl(QGraphicsScene *scene)
 {
-    if(this->playerLeft)
+    if (this->playerLeft)
     {
         sprite->setRotation(sprite->rotation() - 1);
     }
-    else if(this->playerRight)
+    else if (this->playerRight)
     {
         sprite->setRotation(sprite->rotation() + 1);
     }
-    else if(this->playerGo)
+    else if (this->playerGo)
     {
-        QList<QGraphicsItem*> itemsInFront;
-        QList<QGraphicsItem*> itemsOnRobot;
+        QList<QGraphicsItem *> itemsInFront;
+        QList<QGraphicsItem *> itemsOnRobot;
         bool outOfBounds;
         std::tie(itemsInFront, itemsOnRobot, outOfBounds) = detectCollision(scene);
 
-        if(!(!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds)){
+        if (!(!itemsInFront.empty() || !itemsOnRobot.empty() || outOfBounds))
+        {
             move();
         }
     }
