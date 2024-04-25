@@ -7,7 +7,7 @@
 #include <iostream>
 #include <QTimer>
 #include <tuple>
-
+#include <string>
 
 enum RotationDirection{
     LEFT,
@@ -17,8 +17,8 @@ enum RotationDirection{
 class Robot: public QObject{
     Q_OBJECT;
     public:
-        Robot(int posX, int posY);
-        Robot(std::string name, int posX, int posY, int rotation, int distance, RotationDirection direction);
+        Robot(int pos_x, int pos_y);
+        Robot(std::string name, int pos_x, int pos_y, int rotation, int distance, RotationDirection direction);
         ~Robot();
         void spawn(QGraphicsScene* scene);
         void despawn(QGraphicsScene* scene);
@@ -26,41 +26,41 @@ class Robot: public QObject{
         void rotate();
         std::tuple<QList<QGraphicsItem*>, QList<QGraphicsItem*>, bool> detectCollision(QGraphicsScene* scene);
         //getters
-        int getPosX() { return posX; }
-        int getPosY() { return posY; }
+        int getPosX() { return pos_x; }
+        int getPosY() { return pos_y; }
         void simulate(QGraphicsScene *scene);
         
-        std::string getRobotName() { return robotName; }
+        std::string getRobotName() { return robot_name; }
         int getDistance() { return distance; }
         RotationDirection getDirection() { return direction; }
-        int getRotation() { return rotationAngle; }
-        int getRobotRotation(){return robotRotation;}
+        int getRotation() { return rotation_angle; }
+        int getRobotRotation(){return robot_rotation;}
         //setters
-        void setRobotName(std::string name) { this->robotName = name; }
+        void setRobotName(std::string name) { this->robot_name = name; }
         void setDistance(int distance) { this->distance = distance; }
         void setDirection(RotationDirection direction) { this->direction = direction; setSpriteRotation();}
-        void setRotation(int rotation) { this->rotationAngle = rotation; setSpriteRotation();}
-        void setRobotRotation(int rotation){this->robotRotation = rotation;}
+        void setRotation(int rotation) { this->rotation_angle = rotation; setSpriteRotation();}
+        void setRobotRotation(int rotation){this->robot_rotation = rotation;}
         void setSpriteRotation();
         std::string getSaveString();
         void select();
         void unselect();
         void playerControl(QGraphicsScene *scene);
 
-        bool playerGo = false;
-        bool playerLeft = false;
-        bool playerRight = false;
+        bool player_go;
+        bool player_left;
+        bool player_right;
     private:
-        int posX;
-        int posY;
+        int pos_x;
+        int pos_y;
         int distance;
-        std::string robotName;
+        std::string robot_name;
         RotationDirection direction;
-        int rotationAngle;
-        Sprite *sprite = nullptr;
-        bool is_rotating = false;
-        int rotation_checker = 0;
-        bool collision = false;
-        int robotRotation = 60;
+        int rotation_angle;
+        Sprite *sprite;
+        bool is_rotating;
+        int rotation_checker;
+        bool collision;
+        int robot_rotation;
 };
             

@@ -1,15 +1,22 @@
 #include "Controller.hpp"
-#include <iostream>
 
-#define ROBOT_SPRITE_HEIGHT 64
-#define ROBOT_SPRITE_WIDTH 64
+const int ROBOT_SPRITE_HEIGHT = 64;
+const int ROBOT_SPRITE_WIDTH = 64;
+const int ROBOT_SPRITE_OFFSET = 32;
+
+const int ROBOT_HITBOX = 50;
+
+const int BOX_SPRITE_HEIGHT = 64;
+const int BOX_SPRITE_WIDTH = 64;
+const int BOX_HITBOX = 50;
+
 
 Controller::Controller() {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Controller::simulateAll);
     this->map_height = 0;
     this->map_width = 0;
-    this->selectedRobot = nullptr;
+    this->selected_robot = nullptr;
 }
 
 Controller::~Controller() {
@@ -24,11 +31,11 @@ void Controller::clearAll(){
         delete robot;
     }
     for (Box* box : boxes) {
-
+        delete box;
     }
     robots.clear();
     boxes.clear();
-    this->selectedRobot = nullptr;
+    this->selected_robot = nullptr;
     this->scene.clear();
     this->timer->stop();
 }
@@ -36,21 +43,21 @@ void Controller::clearAll(){
 
 bool Controller::addRobot(int x, int y){
     //this might need some changes
-    QRect newRobotRect(x, y, 50, 50); 
+    QRect new_robot_rect(x, y, ROBOT_HITBOX, ROBOT_HITBOX); 
 
     for (Robot* robot : robots) {
-        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
+        QRect existing_robot_rect(robot->getPosX(), robot->getPosY(), ROBOT_HITBOX, ROBOT_HITBOX); 
 
-        if (newRobotRect.intersects(existingRobotRect)) {
+        if (new_robot_rect.intersects(existing_robot_rect)) {
             return false;
         }
     }
 
     for (Box* box : boxes) {
         if (box != nullptr) {
-            QRect existingBoxRect(box->getPosX(), box->getPosY(), 50, 50); 
+            QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_HITBOX, BOX_HITBOX); 
 
-            if (newRobotRect.intersects(existingBoxRect)) {
+            if (new_robot_rect.intersects(existing_box_rect)) {
                 return false;
             }
         }
@@ -82,32 +89,32 @@ void Controller::addRobot(std::string input)
         command.push_back(input.substr(start, end - start));
     }
 
-    std::string robotName = command[0];
-    int robotX = std::stoi(command[1]);
-    int robotY = std::stoi(command[2]);
-    int robotDistance = std::stoi(command[3]);
-    int robotRotation = std::stoi(command[4]);
-    RotationDirection robotDirection = strcmp(command[5].c_str(),"LEFT")? LEFT : RIGHT;
+    std::string robot_name = command[0];
+    int robot_x = std::stoi(command[1]);
+    int robot_y = std::stoi(command[2]);
+    int robot_distance = std::stoi(command[3]);
+    int robot_rotation = std::stoi(command[4]);
+    RotationDirection robot_direction = strcmp(command[5].c_str(),"LEFT")? LEFT : RIGHT;
 
     //this might need some changes
-    QRect newRobotRect(robotX, robotY, 50, 50); 
+    QRect new_robot_rect(robot_x, robot_y, ROBOT_HITBOX, ROBOT_HITBOX); 
 
     for (Robot* robot : this->robots) {
-        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
+        QRect existing_robot_rect(robot->getPosX(), robot->getPosY(), ROBOT_HITBOX, ROBOT_HITBOX); 
 
-        if (newRobotRect.intersects(existingRobotRect)) {
+        if (new_robot_rect.intersects(existing_robot_rect)) {
             return;
         }
     }
     // The new robot does not overlap with any existing robots, so add it
-    this->robots.push_back(new Robot(robotName, robotX, robotY, robotRotation, robotDistance, robotDirection));
+    this->robots.push_back(new Robot(robot_name, robot_x, robot_y, robot_rotation, robot_distance, robot_direction));
 }
 
 
 
 void Controller::simulateAll() {
     for (Robot* robot : robots) {
-        if(this->selectedRobot != robot)
+        if(this->selected_robot != robot)
         {
             robot->simulate(&scene);
         }
@@ -133,20 +140,20 @@ void Controller::spawnRobots(){
 
 bool Controller::addBox(int x, int y){
     //this might need some changes
-      QRect newBoxRect(x, y, 64, 64); 
+      QRect new_box_rect(x, y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
     for (Box* box : boxes) {
-        QRect existingBoxRect(box->getPosX(), box->getPosY(), 64, 64); 
+        QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
-        if (newBoxRect.intersects(existingBoxRect)) {
+        if (new_box_rect.intersects(existing_box_rect)) {
             return false;
         }
     }
 
     for (Robot* robot : robots) {
-        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 64, 64); 
+        QRect existing_robot_rect(robot->getPosX(), robot->getPosY(), ROBOT_SPRITE_HEIGHT, ROBOT_SPRITE_WIDTH); 
 
-        if (newBoxRect.intersects(existingRobotRect)) {
+        if (new_box_rect.intersects(existing_robot_rect)) {
             return false;
         }
     }
@@ -166,21 +173,21 @@ void Controller::addBox(std::string input)
         command.push_back(input.substr(start, end - start));
     }
 
-    int boxX = std::stoi(command[0]);
-    int boxY = std::stoi(command[1]);
+    int box_x = std::stoi(command[0]);
+    int box_y = std::stoi(command[1]);
 
     //this might need some changes
-    QRect newBoxRect(boxX, boxY, 64, 64); 
+    QRect new_box_rect(box_x, box_y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
     for (Box* box : boxes) {
-        QRect existingBoxRect(box->getPosX(), box->getPosY(), 64, 64); 
+        QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
-        if (newBoxRect.intersects(existingBoxRect)) {
+        if (new_box_rect.intersects(existing_box_rect)) {
             return;
         }
     }
     // The new robot does not overlap with any existing robots, so add it
-    boxes.push_back(new Box(boxX, boxY));
+    boxes.push_back(new Box(box_x, box_y));
 }
 
 void Controller::spawnTopmostBox(){
@@ -190,11 +197,11 @@ void Controller::spawnTopmostBox(){
 void Controller::removeItem(int x, int y)
 {
     //Remove box
-    QRect newBoxRect(x, y, 64, 64); 
+    QRect new_box_rect(x, y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
     for (Box* box : boxes) {
-        QRect existingBoxRect(box->getPosX(), box->getPosY(), 64, 64); 
+        QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
-        if (newBoxRect.intersects(existingBoxRect)) {
+        if (new_box_rect.intersects(existing_box_rect)) {
             boxes.erase(std::remove(boxes.begin(), boxes.end(), box), boxes.end());
             box->despawn(&scene);
             return;
@@ -202,13 +209,13 @@ void Controller::removeItem(int x, int y)
     }
 
     //Remove robot
-    QRect newRobotRect(x, y, 50, 50); 
+    QRect new_robot_rect(x, y, ROBOT_HITBOX, ROBOT_HITBOX); 
 
     for (Robot* robot : robots) {
-        QRect existingRobotRect(robot->getPosX(), robot->getPosY(), 50, 50); 
+        QRect existing_robot_rect(robot->getPosX(), robot->getPosY(), ROBOT_HITBOX, ROBOT_HITBOX); 
 
-        if (newRobotRect.intersects(existingRobotRect)) {
-            if(robot == this->selectedRobot)this->selectedRobot=nullptr;
+        if (new_robot_rect.intersects(existing_robot_rect)) {
+            if(robot == this->selected_robot)this->selected_robot=nullptr;
             robots.erase(std::remove(robots.begin(), robots.end(), robot), robots.end());
             robot->despawn(&scene);
             return;
@@ -216,10 +223,10 @@ void Controller::removeItem(int x, int y)
     }
 }
 
-int Controller::saveMap(std::string mapName)
+int Controller::saveMap(std::string map_name)
 {
-    if(mapName.size() == 0)return 1;
-    if(std::filesystem::exists("maps/" + mapName + ".map"))return 2;
+    if(map_name.size() == 0)return 1;
+    if(std::filesystem::exists("maps/" + map_name + ".map"))return 2;
     //create map directory if not exists
     if (!std::filesystem::is_directory("maps") || !std::filesystem::exists("maps"))
     {
@@ -227,41 +234,41 @@ int Controller::saveMap(std::string mapName)
     }
 
     //create map file
-    std::ofstream mapFile("maps/" + mapName + ".map");
+    std::ofstream map_file("maps/" + map_name + ".map");
 
     //insert data to map file
-    mapFile << "(" + std::to_string(this->map_width) + "," + std::to_string(this->map_height) + ")";
+    map_file << "(" + std::to_string(this->map_width) + "," + std::to_string(this->map_height) + ")";
 
-    mapFile << "\n";
+    map_file << "\n";
 
     for (Robot* robot : robots) {
-        mapFile << robot->getSaveString();
+        map_file << robot->getSaveString();
     }
 
-    mapFile << "\n";
+    map_file << "\n";
 
     for (Box* box : boxes) {
-        mapFile << box->getSaveString();
+        map_file << box->getSaveString();
     }
 
-    mapFile << "\n";
+    map_file << "\n";
 
     return 0;
 }
 
-int Controller::loadMap(std::string filePath)
+int Controller::loadMap(std::string file_path)
 {
     //clear map
     this->robots.clear();
     this->boxes.clear();
 
     //open file
-    std::ifstream mapFile(filePath);
-    if(!mapFile.is_open())return 1;
+    std::ifstream map_file(file_path);
+    if(!map_file.is_open())return 1;
     std::string item;
     
     //get map size
-    item = getFileObject(mapFile);
+    item = getFileObject(map_file);
     if(strcmp(item.c_str(), "") == 0)return 2;
     if(countChars(item, ',') != 1)return 2;
 
@@ -275,33 +282,33 @@ int Controller::loadMap(std::string filePath)
 
     this->map_width = std::stoi(command[0]);
     this->map_height = std::stoi(command[1]);
-    if(mapFile.get() != '\n')return 2;
+    if(map_file.get() != '\n')return 2;
 
     //get robots
-    while(mapFile.peek() != '\n')
+    while(map_file.peek() != '\n')
     {
-        item = getFileObject(mapFile);
+        item = getFileObject(map_file);
         if(strcmp(item.c_str(), "") == 0)return 2;
         if(countChars(item, ',') != 5)return 2;
 
         addRobot(item);
         spawnTopmostRobot();
     }
-    if(mapFile.get() != '\n')return 2;
+    if(map_file.get() != '\n')return 2;
 
     //get boxes
-    while(mapFile.peek() != '\n')
+    while(map_file.peek() != '\n')
     {
-        item = getFileObject(mapFile);
+        item = getFileObject(map_file);
         if(strcmp(item.c_str(), "") == 0)return 2;
         if(countChars(item, ',') != 1)return 2;
 
         addBox(item);
         spawnTopmostBox();
     }
-    if(mapFile.get() != '\n')return 2;
+    if(map_file.get() != '\n')return 2;
 
-    this->selectedRobot = nullptr;
+    this->selected_robot = nullptr;
     return 0;
 }
 
@@ -334,24 +341,24 @@ int Controller::countChars(std::string input, char chr)
 int Controller::selectRobot(int x, int y)
 {
     //check if clicked on robot 
-    Robot *newselectedRobot = nullptr;
+    Robot *newselected_robot = nullptr;
     for (Robot* robot : this->robots) {
         if(robot == nullptr){
             return 2;
         }
 
-        QRect existingRobotRect(robot->getPosX()-32, robot->getPosY()-32, 64, 64);
-        if(existingRobotRect.contains(x,y))
+        QRect existing_robot_rect(robot->getPosX()-ROBOT_SPRITE_OFFSET, robot->getPosY()-ROBOT_SPRITE_OFFSET, ROBOT_SPRITE_HEIGHT, ROBOT_SPRITE_WIDTH);
+        if(existing_robot_rect.contains(x,y))
         {
-            newselectedRobot = robot;
+            newselected_robot = robot;
         }
     }
 
     //no robot was selected
-    if(newselectedRobot == nullptr)return 0;
+    if(newselected_robot == nullptr)return 0;
 
     //unselect if selected same robot
-    if(newselectedRobot == this->selectedRobot)
+    if(newselected_robot == this->selected_robot)
     {
         unselectRobot();
         return 2;
@@ -360,17 +367,17 @@ int Controller::selectRobot(int x, int y)
     //select robot
     unselectRobot();
 
-    this->selectedRobot = newselectedRobot;
-    selectedRobot->select();
+    this->selected_robot = newselected_robot;
+    selected_robot->select();
     return 1;
 
 }
 
 void Controller::unselectRobot()
 {
-    if(this->selectedRobot != nullptr)
+    if(this->selected_robot != nullptr)
     {
-        this->selectedRobot->unselect();
-        this->selectedRobot = nullptr;
+        this->selected_robot->unselect();
+        this->selected_robot = nullptr;
     }
 }

@@ -30,9 +30,9 @@ class Controller : public QObject{
         void addBox(std::string input);
         void spawnTopmostBox();
         void removeItem(int x, int y);
-        int saveMap(std::string mapName);
+        int saveMap(std::string map_name);
         int loadMap(std::string filePath);
-        Robot *getSelectedRobot() { return this->selectedRobot; }
+        Robot *getSelectedRobot() { return this->selected_robot; }
 
         int selectRobot(int x, int y);
         void unselectRobot();
@@ -47,6 +47,6 @@ class Controller : public QObject{
         int countChars(std::string input, char chr);
         std::vector<Robot*> robots;
         std::vector<Box*> boxes;
-        Robot *selectedRobot;
+        Robot *selected_robot;
 };
 

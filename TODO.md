@@ -11,5 +11,7 @@ robot parameters
 set proper min and max values for robot parameters (detection distance! so it will not look buggy)
 
 
-        void setDirection(RotationDirection direction) { this->direction = direction; setSpriteRotation();}
-        void setRotation(int rotation) { this->rotationAngle = rotation; setSpriteRotation();}
+add getters, setters
+fix proper naming convention
+functions not in header
+doxy comments

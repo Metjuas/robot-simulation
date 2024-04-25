@@ -1,19 +1,23 @@
 
 #include "PageCreate.hpp"
-#include <iostream>
-#define SCENE_OFFSET 0
 
+
+const int ROBOT_SPRITE_WIDTH = 64;
+const int ROBOT_SPRITE_HEIGHT = 64;
+const int BOX_SPRITE_HEIGHT = 64;
+const int BOX_SPRITE_WIDTH = 64;
+const int DELETE_SPRITE_SIZE = 64;
 
 PageCreate:: ~PageCreate() {
     delete view;
-
 }
 
 
 
-PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller)
- : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
+PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller)
+ : QWidget(parent), stacked_widget(stacked_widget), controller(controller){
     this->controller = controller;
+    this->current_cursor_state = cursor_state::IDLE;
     view = new CustomGraphicsView(&controller->scene, this);
     view->setRenderHint(QPainter::Antialiasing);
 
@@ -21,12 +25,12 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     //create widgets
     
     //button for robot
-    QPushButton* Robot_button = new QPushButton(this);
+    QPushButton* robot_button = new QPushButton(this);
     QIcon icon(":assets/RobotAlly.png");
-    Robot_button->setIcon(icon);
+    robot_button->setIcon(icon);
     //settings size
-    Robot_button->setIconSize(QSize(30, 30));
-    Robot_button->setCheckable(true);
+    robot_button->setIconSize(QSize(30, 30));
+    robot_button->setCheckable(true);
     
     //button for Box
     QPushButton* box_button = new QPushButton(this);
@@ -44,11 +48,11 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     trash_button->setIconSize(QSize(30, 30));
     trash_button->setCheckable(true);
 
-    QLineEdit *Map_name = new QLineEdit;
+    QLineEdit *map_name = new QLineEdit;
     QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
 
-    Robot_name = new QLineEdit;
+    robot_name = new QLineEdit;
     direction_num = new QSpinBox();
     direction_num->setPrefix("Direction:");
     direction_num->setMinimum(0);
@@ -67,54 +71,54 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 
 
     //add widgets and set layouts    
-    toolBarLayout = new QHBoxLayout();
-    toolBarLayout->addWidget(box_button);
-    toolBarLayout->addWidget(Robot_button);  
-    toolBarLayout->addWidget(trash_button);
-    toolBarLayout->addWidget(Map_name);
-    toolBarLayout->addWidget(ok_button);
-    toolBarLayout->addWidget(save_button);
+    tool_bar_layout = new QHBoxLayout();
+    tool_bar_layout->addWidget(box_button);
+    tool_bar_layout->addWidget(robot_button);  
+    tool_bar_layout->addWidget(trash_button);
+    tool_bar_layout->addWidget(map_name);
+    tool_bar_layout->addWidget(ok_button);
+    tool_bar_layout->addWidget(save_button);
 
-    dataSetLayout = new QVBoxLayout();
-    dataSetLayout->addWidget(Robot_name);
-    dataSetLayout->addWidget(direction_num);
-    dataSetLayout->addWidget(distance_num);
-    dataSetLayout->addWidget(rotation_num);
+    data_set_layout = new QVBoxLayout();
+    data_set_layout->addWidget(robot_name);
+    data_set_layout->addWidget(direction_num);
+    data_set_layout->addWidget(distance_num);
+    data_set_layout->addWidget(rotation_num);
 
-    dataSetLayout->addWidget(direction_type);
-
-
-    mainLayout = new QGridLayout();
+    data_set_layout->addWidget(direction_type);
 
 
-    this->setLayout(mainLayout);
+    main_layout = new QGridLayout();
+
+
+    this->setLayout(main_layout);
 
     //creating map 
     map = std::make_unique<Map>(controller, this);
 
     //clicking events
-    connect(Robot_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+    connect(robot_button, &QPushButton::toggled, [this, robot_button, box_button, trash_button](bool checked) {
         if (checked) {
             // change color to light gray when button is checked
-            Robot_button->setStyleSheet("background-color: #D3D3D3"); 
+            robot_button->setStyleSheet("background-color: #D3D3D3"); 
             box_button->setStyleSheet("");
             trash_button->setStyleSheet("");
             current_cursor_state = cursor_state::SPAWN_ROBOT;
             startRecordingClicks();
         } else {
             // reset color when button is unchecked
-            Robot_button->setStyleSheet("");
+            robot_button->setStyleSheet("");
             stopRecordingClicks();
             current_cursor_state = cursor_state::IDLE;
 
         }
     });
 
-    connect(box_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+    connect(box_button, &QPushButton::toggled, [this, robot_button, box_button, trash_button](bool checked) {
         if (checked) {
             // change color to light gray when button is checked
             box_button->setStyleSheet("background-color: #D3D3D3");
-            Robot_button->setStyleSheet("");
+            robot_button->setStyleSheet("");
             trash_button->setStyleSheet("");
             current_cursor_state = cursor_state::SPAWN_BOX;
             startRecordingClicks();
@@ -126,12 +130,12 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
         }
     });
 
-    connect(trash_button, &QPushButton::toggled, [this, Robot_button, box_button, trash_button](bool checked) {
+    connect(trash_button, &QPushButton::toggled, [this, robot_button, box_button, trash_button](bool checked) {
         if (checked) {
             // change color to light gray when button is checked
             trash_button->setStyleSheet("background-color: #D3D3D3"); 
             box_button->setStyleSheet("");
-            Robot_button->setStyleSheet("");
+            robot_button->setStyleSheet("");
             current_cursor_state = cursor_state::REMOVE_ITEM;
             startRecordingClicks();
         } else {
@@ -147,37 +151,37 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
     connect(ok_button, &QPushButton::clicked, [=]() {
         controller->unselectRobot();
         //parent->resize(300,500);
-        stackedWidget->setCurrentIndex(0);
+        stacked_widget->setCurrentIndex(0);
     });
 
     connect(save_button, &QPushButton::clicked, [=]() {
-        int ret = controller->saveMap(Map_name->displayText().toUtf8().constData());
+        int ret = controller->saveMap(map_name->displayText().toUtf8().constData());
 
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowTitle("Caution");
+        QMessageBox message_box;
+        message_box.setIcon(QMessageBox::Warning);
+        message_box.setWindowTitle("Caution");
 
         if(ret == 1)
         {
-            msgBox.setText("Please insert map name.");
+            message_box.setText("Please insert map name.");
         }
         else if(ret == 2)
         {
-            msgBox.setText("Map with this name already exists!");
+            message_box.setText("Map with this name already exists!");
         }
         else if(ret == 0)
         {
-            msgBox.setIcon(QMessageBox::Information);
-            msgBox.setWindowTitle("Information");
-            msgBox.setText("Map created successfuly.");
+            message_box.setIcon(QMessageBox::Information);
+            message_box.setWindowTitle("Information");
+            message_box.setText("Map created successfuly.");
         }
 
-        msgBox.exec();
+        message_box.exec();
     });
 
     
     //Robot setup events
-    connect(Robot_name, static_cast<void(QLineEdit::*)(const QString &)>(&QLineEdit::textChanged), [=](const QString &text) {
+    connect(robot_name, static_cast<void(QLineEdit::*)(const QString &)>(&QLineEdit::textChanged), [=](const QString &text) {
         if(controller->getSelectedRobot() != nullptr)
         {
             controller->getSelectedRobot()->setRobotName(text.toStdString());
@@ -217,20 +221,17 @@ PageCreate::PageCreate(QStackedWidget *stackedWidget, QWidget *parent, Controlle
 }
 
 
-
 void PageCreate::handleMouseClick(int x, int y){
     std::cout << "Mouse click at: " << x << ", " << y << std::endl;
      if(current_cursor_state == cursor_state::SPAWN_ROBOT){
         //robot size
-        int robotWidth = 64; 
-        int robotHeight = 64;
 
-        int adjustedX = std::max(robotWidth / 2, std::min(static_cast<int>(view->scene()->width()) - robotWidth / 2, x));
-        int adjustedY = std::max(robotHeight / 2, std::min(static_cast<int>(view->scene()->height()) - robotHeight / 2, y));
+        int adjusted_x = std::max(ROBOT_SPRITE_WIDTH / 2, std::min(static_cast<int>(view->scene()->width()) - ROBOT_SPRITE_WIDTH / 2, x));
+        int adjusted_y = std::max(ROBOT_SPRITE_HEIGHT / 2, std::min(static_cast<int>(view->scene()->height()) - ROBOT_SPRITE_HEIGHT / 2, y));
 
-        if(controller->addRobot(adjustedX, adjustedY)){
+        if(controller->addRobot(adjusted_x, adjusted_y)){
             controller->spawnTopmostRobot();
-            controller->selectRobot(adjustedX, adjustedY);
+            controller->selectRobot(adjusted_x, adjusted_y);
             robotSelectGUI(true);
         }
 
@@ -265,15 +266,15 @@ void PageCreate::startRecordingClicks()
     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
         QPixmap pixmap(":assets/RobotAlly.png");
         //adding transparency to the pixmap
-        QPixmap transparentPixmap(pixmap.size());
-        transparentPixmap.fill(Qt::transparent); 
+        QPixmap transparent_pixmap(pixmap.size());
+        transparent_pixmap.fill(Qt::transparent); 
         //setting the opacity of the pixmap
-        QPainter painter(&transparentPixmap);
+        QPainter painter(&transparent_pixmap);
         painter.setOpacity(0.5); 
         painter.drawPixmap(0, 0, pixmap); 
         painter.end();
         //making the cursor robot
-        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        QCursor cursor(transparent_pixmap.scaled(ROBOT_SPRITE_HEIGHT, ROBOT_SPRITE_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor); 
         //view->setMode(CustomGraphicsView::RecordClicks);
     }
@@ -281,15 +282,15 @@ void PageCreate::startRecordingClicks()
     {
         QPixmap pixmap(":assets/Box.png");
         //adding transparency to the pixmap
-        QPixmap transparentPixmap(pixmap.size());
-        transparentPixmap.fill(Qt::transparent); 
+        QPixmap transparent_pixmap(pixmap.size());
+        transparent_pixmap.fill(Qt::transparent); 
         //setting the opacity of the pixmap
-        QPainter painter(&transparentPixmap);
+        QPainter painter(&transparent_pixmap);
         painter.setOpacity(0.5); 
         painter.drawPixmap(0, 0, pixmap); 
         painter.end();
         //making the cursor robot
-        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        QCursor cursor(transparent_pixmap.scaled(BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor);
         //view->setMode(CustomGraphicsView::RecordClicks);        
     }
@@ -297,15 +298,14 @@ void PageCreate::startRecordingClicks()
     {
         QPixmap pixmap(":assets/remove.png");
         //adding transparency to the pixmap
-        QPixmap transparentPixmap(pixmap.size());
-        transparentPixmap.fill(Qt::transparent); 
+        QPixmap transparent_pixmap(pixmap.size());
+        transparent_pixmap.fill(Qt::transparent); 
         //setting the opacity of the pixmap
-        QPainter painter(&transparentPixmap);
+        QPainter painter(&transparent_pixmap);
         painter.setOpacity(0.5); 
         painter.drawPixmap(0, 0, pixmap); 
         painter.end();
-        //making the cursor robot
-        QCursor cursor(transparentPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
+        QCursor cursor(transparent_pixmap.scaled(DELETE_SPRITE_SIZE, DELETE_SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation), -1, -1);
         view->viewport()->setCursor(cursor);
         //view->setMode(CustomGraphicsView::RecordClicks);    
     }
@@ -319,22 +319,22 @@ void PageCreate::stopRecordingClicks()
 }
 
 void PageCreate::showEvent(QShowEvent *event) {
-    if (m_stackedWidget->currentIndex() == m_stackedWidget->indexOf(this)) {
+    if (stacked_widget->currentIndex() == stacked_widget->indexOf(this)) {
         
         QDialog dialog(this);
         dialog.setWindowTitle("Set the size");
         QFormLayout form(&dialog);
         
         //dialog windows
-        QSpinBox *spinBox1 = new QSpinBox(&dialog);
-        spinBox1->setRange(0, 1000);
-        spinBox1->setValue(600);
-        form.addRow("Height:", spinBox1);
+        QSpinBox *spin_box_1 = new QSpinBox(&dialog);
+        spin_box_1->setRange(0, 1000);
+        spin_box_1->setValue(600);
+        form.addRow("Height:", spin_box_1);
 
-        QSpinBox *spinBox2 = new QSpinBox(&dialog);
-        spinBox2->setRange(0, 1000);
-        spinBox2->setValue(600);
-        form.addRow("Width:", spinBox2);
+        QSpinBox *spin_box_2 = new QSpinBox(&dialog);
+        spin_box_2->setRange(0, 1000);
+        spin_box_2->setValue(600);
+        form.addRow("Width:", spin_box_2);
 
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
                                    Qt::Horizontal, &dialog);
@@ -346,8 +346,8 @@ void PageCreate::showEvent(QShowEvent *event) {
         // if the user accepts the dialog, it goes to the next page
        if (dialog.exec() == QDialog::Accepted) {
             if(controller){
-                controller->map_height = spinBox1->value();
-                controller->map_width = spinBox2->value();
+                controller->map_height = spin_box_1->value();
+                controller->map_width = spin_box_2->value();
                 if(view){
                     view->setFixedSize(controller->map_width, controller->map_height);
                     controller->scene.setSceneRect(0, 0, controller->map_width, controller->map_height);
@@ -358,31 +358,31 @@ void PageCreate::showEvent(QShowEvent *event) {
         }
         // in case the user cancels the dialog, it goes back to the main page
         else {
-            m_stackedWidget->setCurrentIndex(0);
+            stacked_widget->setCurrentIndex(0);
         }
     }
 
     QWidget::showEvent(event);
 
     //add widgets to page
-    mainLayout->addLayout(toolBarLayout, 1, 0,  Qt::AlignBottom);
-    mainLayout->addLayout(dataSetLayout, 0, 1, 2, 1, Qt::AlignRight);
-    mainLayout->addWidget(view, 0, 0, 1, 1);
+    main_layout->addLayout(tool_bar_layout, 1, 0,  Qt::AlignBottom);
+    main_layout->addLayout(data_set_layout, 0, 1, 2, 1, Qt::AlignRight);
+    main_layout->addWidget(view, 0, 0, 1, 1);
 }
 
 void PageCreate::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
     
-    mainLayout->removeItem(toolBarLayout);
-    mainLayout->removeItem(dataSetLayout);
-    mainLayout->removeWidget(view);
+    main_layout->removeItem(tool_bar_layout);
+    main_layout->removeItem(data_set_layout);
+    main_layout->removeWidget(view);
 }
 
 void PageCreate::robotSelectGUI(bool toggle)
 {
     if(toggle)
     {
-        Robot_name->setEnabled(true);
+        robot_name->setEnabled(true);
         direction_num->setEnabled(true);
         distance_num->setEnabled(true);
         direction_type->setEnabled(true);
@@ -390,17 +390,15 @@ void PageCreate::robotSelectGUI(bool toggle)
 
         //load data to widgets
         Robot *robot = this->controller->getSelectedRobot();
-        Robot_name->setText(QString::fromStdString(robot->getRobotName()));
+        robot_name->setText(QString::fromStdString(robot->getRobotName()));
         direction_num->setValue(robot->getRotation());
         distance_num->setValue(robot->getDistance());
         rotation_num->setValue(robot->getRobotRotation());
         direction_type->setCurrentIndex(robot->getDirection()==LEFT?0:1);
-
-
     }
     else
     {
-        Robot_name->setEnabled(false);
+        robot_name->setEnabled(false);
         direction_num->setEnabled(false);
         distance_num->setEnabled(false);
         rotation_num->setEnabled(false);

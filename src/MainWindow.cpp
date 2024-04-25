@@ -5,23 +5,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Main window");
     controller = std::make_unique<Controller>();
 
-    QStackedWidget *stackedWidget = new QStackedWidget(this);
-    pageMenu = std::make_unique<PageMenu>(stackedWidget, this, controller.get());
-    pageCreate = std::make_unique<PageCreate>(stackedWidget, this, controller.get());
-    pageSim = std::make_unique<PageSim>(stackedWidget, this, controller.get());
+    QStackedWidget *stacked_widget = new QStackedWidget(this);
+    page_menu = std::make_unique<PageMenu>(stacked_widget, this, controller.get());
+    page_create = std::make_unique<PageCreate>(stacked_widget, this, controller.get());
+    page_sim = std::make_unique<PageSim>(stacked_widget, this, controller.get());
 
-    stackedWidget->addWidget(pageMenu.get());
-    stackedWidget->addWidget(pageSim.get());
-    stackedWidget->addWidget(pageCreate.get());
-    setCentralWidget(stackedWidget);
+    stacked_widget->addWidget(page_menu.get());
+    stacked_widget->addWidget(page_sim.get());
+    stacked_widget->addWidget(page_create.get());
+    setCentralWidget(stacked_widget);
 
-    connect(stackedWidget, &QStackedWidget::currentChanged, [=](int index) {
+    connect(stacked_widget, &QStackedWidget::currentChanged, [=](int) {
         adjustSize();
     });
 
 }
-#include <iostream>
 
-MainWindow::~MainWindow() {
-
-}

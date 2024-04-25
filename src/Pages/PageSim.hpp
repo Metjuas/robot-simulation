@@ -14,19 +14,18 @@
 #include <QDir>
 #include "Sprite.hpp"
 #include "Robot.hpp"
-#include <iostream>
 #include <QPointer>
 #include <QShowEvent>
 #include <QHideEvent>
 #include "CustomGraphicsView.hpp"
+#include <iostream>
 
-#include "CustomGraphicsView.hpp"
 
 class PageSim : public QWidget
 {
     Q_OBJECT
     public:
-    PageSim(QStackedWidget *stackedWidget, QWidget *parent = nullptr, Controller *controller = nullptr);
+    PageSim(QStackedWidget *stacked_widget, QWidget *parent = nullptr, Controller *controller = nullptr);
     ~PageSim();
         
     protected:
@@ -37,13 +36,13 @@ class PageSim : public QWidget
         void handleMouseClick(int x, int y);
 
     private:
-    bool robotSelectGUI(bool toggle);
+    void robotSelectGUI(bool toggle);
 
-    QVBoxLayout *vLayout;
-    QStackedWidget *m_stackedWidget;
+    QVBoxLayout *v_layout;
+    QStackedWidget *stacked_widget;
     QTimer *timer;
     CustomGraphicsView *view;
-    QGridLayout *gridLayout;
+    QGridLayout *grid_layout;
     Controller *controller;
 
     //robot controll Widgets

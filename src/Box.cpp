@@ -1,11 +1,11 @@
 #include "Box.hpp"
 
-#define SPAWN_OFFSET 0
 
-Box::Box(int posX, int posY)
+Box::Box(int pos_x, int pos_y)
 {
-    this->x = posX;
-    this->y = posY;
+    sprite = nullptr;
+    this->x = pos_x;
+    this->y = pos_y;
 }
 
 void Box::spawn(QGraphicsScene* scene) {
@@ -15,7 +15,7 @@ void Box::spawn(QGraphicsScene* scene) {
     int height = 64;//image.height();
 
     //there is a offset needed, because the sprite will spawn in the top left corner of the image
-    sprite = new Sprite(":assets/Box.png", nullptr, this->x-(width/2)+SPAWN_OFFSET, this->y-(height/2));
+    sprite = new Sprite(":assets/Box.png", nullptr, this->x-(width/2), this->y-(height/2));
     
     scene->addItem(sprite);
 }

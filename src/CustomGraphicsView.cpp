@@ -17,3 +17,9 @@ void CustomGraphicsView::mousePressEvent(QMouseEvent *event)
     }
 
 }
+
+void CustomGraphicsView::resizeEvent(QResizeEvent *event)
+{
+    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    QGraphicsView::resizeEvent(event);
+}

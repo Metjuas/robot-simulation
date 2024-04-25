@@ -16,16 +16,13 @@ public:
     enum Mode { Normal, RecordClicks };
     
     CustomGraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr)
-        : QGraphicsView(scene, parent), mode(Normal){}
+    : QGraphicsView(scene, parent), mode(Normal){}
 
     void setMode(Mode mode) { this->mode = mode; }
 
     std::pair<int, int> getLastClickPosition() const { return last_click_pos; }
-    void resizeEvent(QResizeEvent *event)
-    {
-        fitInView(sceneRect(), Qt::KeepAspectRatio);
-        QGraphicsView::resizeEvent(event);
-    }
+
+    void resizeEvent(QResizeEvent *event);
 signals:
     void mouseClick(int x, int y);
 protected:

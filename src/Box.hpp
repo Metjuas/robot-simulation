@@ -6,7 +6,7 @@
 
 class Box{
 public:
-    Box(int posX, int posY);
+    Box(int pos_x, int pos_y);
     void spawn(QGraphicsScene* scene);
     void despawn(QGraphicsScene* scene);
     int getPosX() { return x; }
@@ -15,5 +15,5 @@ public:
 private:
     int x;
     int y;
-    Sprite *sprite = nullptr;
+    Sprite *sprite;
 };

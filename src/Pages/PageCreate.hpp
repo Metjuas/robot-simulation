@@ -16,6 +16,7 @@
 #include <QHideEvent>
 
 #include <memory>
+#include <iostream>
 
 #include "Sprite.hpp"
 #include "Robot.hpp"
@@ -48,19 +49,19 @@ class PageCreate : public QWidget
     private:
         void robotSelectGUI(bool toggle);
 
-        QGridLayout *mainLayout;
-        QHBoxLayout *toolBarLayout;
-        QVBoxLayout *dataSetLayout;
+        QGridLayout *main_layout;
+        QHBoxLayout *tool_bar_layout;
+        QVBoxLayout *data_set_layout;
         CustomGraphicsView* view;
 
-        QStackedWidget *m_stackedWidget;
+        QStackedWidget *stacked_widget;
         Controller *controller;
         
         std::unique_ptr<Map> map;
-        cursor_state current_cursor_state = cursor_state::IDLE;
+        cursor_state current_cursor_state;
 
         //Robot setup widgets
-        QLineEdit *Robot_name;
+        QLineEdit *robot_name;
         QSpinBox *direction_num;
         QSpinBox *distance_num;
         QSpinBox *rotation_num;

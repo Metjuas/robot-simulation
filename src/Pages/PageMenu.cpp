@@ -1,11 +1,8 @@
 
 #include "PageMenu.hpp"
-#include <iostream>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QTextStream>
 
-PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
+
+PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
     this->controller = controller;
     //parent->resize(300, 500);
     this->setFixedSize(300,500);
@@ -17,45 +14,45 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *c
     start_button->setFixedHeight(50);
 
     //add widgets and set layouts    
-    QGridLayout *mainLayout = new QGridLayout();
-    QVBoxLayout *groupLayout = new QVBoxLayout();
-    groupLayout->addWidget(create_button);
-    groupLayout->addWidget(select_button);
-    mainLayout->addLayout(groupLayout, 0, 0,  Qt::AlignBottom);
-    mainLayout->addWidget(start_button, 1, 0,  Qt::AlignBottom);
+    QGridLayout *main_layout = new QGridLayout();
+    QVBoxLayout *group_layout = new QVBoxLayout();
+    group_layout->addWidget(create_button);
+    group_layout->addWidget(select_button);
+    main_layout->addLayout(group_layout, 0, 0,  Qt::AlignBottom);
+    main_layout->addWidget(start_button, 1, 0,  Qt::AlignBottom);
 
-    this->setLayout(mainLayout);
+    this->setLayout(main_layout);
 
     //button events
     connect(create_button, &QPushButton::clicked, [=]() {
         
-        stackedWidget->setCurrentIndex(2);
+        stacked_widget->setCurrentIndex(2);
     });
 
     connect(select_button, &QPushButton::clicked, [=]() {
-        // stackedWidget->setCurrentIndex(3);
-        QString fileName = QFileDialog::getOpenFileName(this,
+        // stacked_widget->setCurrentIndex(3);
+        QString file_name = QFileDialog::getOpenFileName(this,
         tr("Open Map"), "./maps",
         tr("Map files (*.map)"));
 
-    if (fileName.isEmpty())
+    if (file_name.isEmpty())
         return;
     else 
     {
-        int ret = this->controller->loadMap(fileName.toStdString());
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowTitle("Caution");
+        int ret = this->controller->loadMap(file_name.toStdString());
+        QMessageBox message_box;
+        message_box.setIcon(QMessageBox::Warning);
+        message_box.setWindowTitle("Caution");
 
         if(ret == 1)
         {
-            msgBox.setText("Cannot open map file!");
-            msgBox.exec();
+            message_box.setText("Cannot open map file!");
+            message_box.exec();
         }
         else if(ret == 2)
         {
-            msgBox.setText("Invlid file format.");
-            msgBox.exec();
+            message_box.setText("Invlid file format.");
+            message_box.exec();
         }
 
 
@@ -67,14 +64,14 @@ PageMenu::PageMenu(QStackedWidget *stackedWidget, QWidget *parent, Controller *c
 
         if(this->controller->map_width == 0 || this->controller->map_height == 0)
         {
-            QMessageBox msgBox;
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setWindowTitle("Caution");
-            msgBox.setText("Please create or select a map first.");
-            msgBox.exec();
+            QMessageBox message_box;
+            message_box.setIcon(QMessageBox::Warning);
+            message_box.setWindowTitle("Caution");
+            message_box.setText("Please create or select a map first.");
+            message_box.exec();
             return;
         }
         parent->resize(this->controller->map_width,this->controller->map_height);
-        stackedWidget->setCurrentIndex(1);
+        stacked_widget->setCurrentIndex(1);
     });
 }

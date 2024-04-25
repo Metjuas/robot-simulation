@@ -1,8 +1,10 @@
 #include "PageSim.hpp"
-#include <iostream>
+
 #define TickRate 2
 
-PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *controller) : QWidget(parent), m_stackedWidget(stackedWidget), controller(controller){
+const int ROBOT_SPRITE_OFFSET = 32;
+
+PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller) : QWidget(parent), stacked_widget(stacked_widget), controller(controller){
     this->controller = controller;
     view = new CustomGraphicsView(&controller->scene, nullptr);
     view->setRenderHint(QPainter::Antialiasing);
@@ -21,7 +23,7 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
     connect(menu_button, &QPushButton::clicked, [=]() {
         parent->resize(300,500);
         controller->clearAll();
-        stackedWidget->setCurrentIndex(0);
+        stacked_widget->setCurrentIndex(0);
     });
 
     //menu button Click
@@ -47,12 +49,12 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
             if(checked)
             {
                 go_button->setText(QString::fromStdString("Stop"));
-                controller->getSelectedRobot()->playerGo = true;
+                controller->getSelectedRobot()->player_go = true;
             }
             else
             {
                 go_button->setText(QString::fromStdString("Go"));
-                controller->getSelectedRobot()->playerGo = false;
+                controller->getSelectedRobot()->player_go = false;
             }
         }
     });
@@ -61,13 +63,13 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
     connect(left_button, &QPushButton::pressed, [=]() {
         if(controller->getSelectedRobot() != nullptr)
         {
-            controller->getSelectedRobot()->playerLeft = true;
+            controller->getSelectedRobot()->player_left = true;
         }
     });
     connect(left_button, &QPushButton::released, [=]() {
         if(controller->getSelectedRobot() != nullptr)
         {
-            controller->getSelectedRobot()->playerLeft = false;
+            controller->getSelectedRobot()->player_left = false;
         }
     });
 
@@ -76,37 +78,37 @@ PageSim::PageSim(QStackedWidget *stackedWidget, QWidget *parent, Controller *con
     connect(right_button, &QPushButton::pressed, [=]() {
         if(controller->getSelectedRobot() != nullptr)
         {
-            controller->getSelectedRobot()->playerRight = true;
+            controller->getSelectedRobot()->player_right = true;
         }
     });
     connect(right_button, &QPushButton::released, [=]() {
         if(controller->getSelectedRobot() != nullptr)
         {
-            controller->getSelectedRobot()->playerRight = false;
+            controller->getSelectedRobot()->player_right = false;
         }
     });
 
 
     //setLayout
-    gridLayout = new QGridLayout();
-    gridLayout->columnMinimumWidth(10);
-    //gridLayout->maximumSize().setWidth(10);
+    grid_layout = new QGridLayout();
+    grid_layout->columnMinimumWidth(10);
+    //grid_layout->maximumSize().setWidth(10);
 
 
-    gridLayout->addWidget(pause_button, 0, 0, 2, 2);
-    gridLayout->addWidget(menu_button, 0, 10, 2, 2);
-    gridLayout->addWidget(go_button, 0, 4, 1, 2);
-    gridLayout->addWidget(left_button, 1, 4);
-    gridLayout->addWidget(right_button, 1, 5);
+    grid_layout->addWidget(pause_button, 0, 0, 2, 2);
+    grid_layout->addWidget(menu_button, 0, 10, 2, 2);
+    grid_layout->addWidget(go_button, 0, 4, 1, 2);
+    grid_layout->addWidget(left_button, 1, 4);
+    grid_layout->addWidget(right_button, 1, 5);
 
-    vLayout = new QVBoxLayout();
+    v_layout = new QVBoxLayout();
 
 
     
 
     
 
-    this->setLayout(vLayout);
+    this->setLayout(v_layout);
     view->setMode(CustomGraphicsView::RecordClicks);
 
 }
@@ -120,22 +122,22 @@ void PageSim::showEvent(QShowEvent *event) {
     // Start the simulation
     controller->startSimulation();
 
-    vLayout->addWidget(view);
-    vLayout->addLayout(gridLayout);
+    v_layout->addWidget(view);
+    v_layout->addLayout(grid_layout);
 }
 
 void PageSim::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
 
-    vLayout->removeWidget(view);
-    vLayout->removeItem(gridLayout);
+    v_layout->removeWidget(view);
+    v_layout->removeItem(grid_layout);
 }
 
 PageSim::~PageSim() {
 
 }
 
-bool PageSim::robotSelectGUI(bool toggle)
+void PageSim::robotSelectGUI(bool toggle)
 {
     if(this->controller->getSelectedRobot() != nullptr)
     {
@@ -158,7 +160,7 @@ bool PageSim::robotSelectGUI(bool toggle)
 }
 
 void PageSim::handleMouseClick(int x, int y){
-    int ret = controller->selectRobot(x-32,y-32);
+    int ret = controller->selectRobot(x-ROBOT_SPRITE_OFFSET,y-ROBOT_SPRITE_OFFSET);
     if(ret == 1)
     {
         robotSelectGUI(true);
@@ -167,4 +169,5 @@ void PageSim::handleMouseClick(int x, int y){
     {
         robotSelectGUI(false);
     }
+
 }

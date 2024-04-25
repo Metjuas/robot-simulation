@@ -20,11 +20,10 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 private:
-    std::unique_ptr<PageMenu> pageMenu = nullptr;
-    std::unique_ptr<PageCreate> pageCreate = nullptr;
-    std::unique_ptr<PageSim> pageSim = nullptr;
+    std::unique_ptr<PageMenu> page_menu = nullptr;
+    std::unique_ptr<PageCreate> page_create = nullptr;
+    std::unique_ptr<PageSim> page_sim = nullptr;
     std::unique_ptr<Controller> controller;
 
 };
