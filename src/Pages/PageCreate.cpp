@@ -14,6 +14,10 @@ PageCreate:: ~PageCreate() {
 
 
 
+/// @brief creates page for map creation, adds every widget and button
+/// @param stacked_widget widget that handles page swapping
+/// @param parent parent window 
+/// @param controller controller for data passing
 PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller)
  : QWidget(parent), stacked_widget(stacked_widget), controller(controller){
     this->controller = controller;
@@ -114,6 +118,7 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
         }
     });
 
+    // click event for box button
     connect(box_button, &QPushButton::toggled, [this, robot_button, box_button, trash_button](bool checked) {
         if (checked) {
             // change color to light gray when button is checked
@@ -130,6 +135,7 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
         }
     });
 
+    // click event for trash button
     connect(trash_button, &QPushButton::toggled, [this, robot_button, box_button, trash_button](bool checked) {
         if (checked) {
             // change color to light gray when button is checked
@@ -221,6 +227,9 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
 }
 
 
+/// @brief handling mouse click - spawning entities
+/// @param x x axis position of entity spawn
+/// @param y y axis position of entity spawn
 void PageCreate::handleMouseClick(int x, int y){
     std::cout << "Mouse click at: " << x << ", " << y << std::endl;
      if(current_cursor_state == cursor_state::SPAWN_ROBOT){
@@ -261,6 +270,7 @@ void PageCreate::handleMouseClick(int x, int y){
     }
 }
 
+/// @brief handling recording clicks, changes mouse into sprite
 void PageCreate::startRecordingClicks()
 {
     if(current_cursor_state == cursor_state::SPAWN_ROBOT){
@@ -312,12 +322,15 @@ void PageCreate::startRecordingClicks()
 }
 
 
+/// @brief stops recording clicks
 void PageCreate::stopRecordingClicks()
 {
     view->viewport()->setCursor(Qt::ArrowCursor);
     //view->setMode(CustomGraphicsView::Normal);
 }
 
+/// @brief event when swapping to PageCreate - handles popup and resizing
+/// @param event 
 void PageCreate::showEvent(QShowEvent *event) {
     if (stacked_widget->currentIndex() == stacked_widget->indexOf(this)) {
         
@@ -370,6 +383,8 @@ void PageCreate::showEvent(QShowEvent *event) {
     main_layout->addWidget(view, 0, 0, 1, 1);
 }
 
+/// @brief hides every widget from page create
+/// @param event 
 void PageCreate::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
     
@@ -378,6 +393,8 @@ void PageCreate::hideEvent(QHideEvent *event) {
     main_layout->removeWidget(view);
 }
 
+/// @brief robot selection handling
+/// @param toggle 
 void PageCreate::robotSelectGUI(bool toggle)
 {
     if(toggle)

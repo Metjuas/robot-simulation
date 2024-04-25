@@ -26,7 +26,6 @@ class PageSim : public QWidget
     Q_OBJECT
     public:
     PageSim(QStackedWidget *stacked_widget, QWidget *parent = nullptr, Controller *controller = nullptr);
-    ~PageSim();
         
     protected:
     void showEvent(QShowEvent *event) override;

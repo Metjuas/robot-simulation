@@ -1,6 +1,8 @@
 
 #include "MainWindow.hpp"
 
+/// @brief Creates the main window of the application, adds widgets to it and connects signals and slots
+/// @param parent 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Main window");
     controller = std::make_unique<Controller>();

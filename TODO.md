@@ -12,5 +12,4 @@ set proper min and max values for robot parameters (detection distance! so it wi
 
 
 add getters, setters
-functions not in header
 doxy comments

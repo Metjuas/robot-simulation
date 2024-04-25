@@ -1,9 +1,12 @@
 #include "PageSim.hpp"
 
-#define TickRate 2
 
 const int ROBOT_SPRITE_OFFSET = 32;
 
+/// @brief Creates simulation page, adds layout and buttons
+/// @param stacked_widget widget for swapping pages
+/// @param parent main window - parent
+/// @param controller controller for passing data
 PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller) : QWidget(parent), stacked_widget(stacked_widget), controller(controller){
     this->controller = controller;
     view = new CustomGraphicsView(&controller->scene, nullptr);
@@ -113,6 +116,8 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
 
 }
 
+/// @brief showEvent for simulation page, handles 
+/// @param event 
 void PageSim::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
 
@@ -126,6 +131,7 @@ void PageSim::showEvent(QShowEvent *event) {
     v_layout->addLayout(grid_layout);
 }
 
+/// @brief hideEvent for simulation page
 void PageSim::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
 
@@ -133,10 +139,10 @@ void PageSim::hideEvent(QHideEvent *event) {
     v_layout->removeItem(grid_layout);
 }
 
-PageSim::~PageSim() {
 
-}
 
+/// @brief handles robot selection 
+/// @param toggle 
 void PageSim::robotSelectGUI(bool toggle)
 {
     if(this->controller->getSelectedRobot() != nullptr)
@@ -159,6 +165,9 @@ void PageSim::robotSelectGUI(bool toggle)
     }
 }
 
+/// @brief handles mouse click events
+/// @param x position on x axis
+/// @param y position on y axis
 void PageSim::handleMouseClick(int x, int y){
     int ret = controller->selectRobot(x-ROBOT_SPRITE_OFFSET,y-ROBOT_SPRITE_OFFSET);
     if(ret == 1)

@@ -2,6 +2,10 @@
 #include "PageMenu.hpp"
 
 
+/// @brief creates PageMenu, sets layout and button events
+/// @param stacked_widget widget for page swapping
+/// @param parent main window - parent
+/// @param controller controller for passing data
 PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
     this->controller = controller;
     //parent->resize(300, 500);

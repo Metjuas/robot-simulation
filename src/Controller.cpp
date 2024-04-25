@@ -10,7 +10,9 @@ const int BOX_SPRITE_HEIGHT = 64;
 const int BOX_SPRITE_WIDTH = 64;
 const int BOX_HITBOX = 50;
 
+const int TICKRATE = 10;
 
+/// @brief Initializes Controller
 Controller::Controller() {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Controller::simulateAll);
@@ -26,6 +28,7 @@ Controller::~Controller() {
     }
 }
 
+/// @brief clears all controller data
 void Controller::clearAll(){
     for (Robot* robot : robots) {
         delete robot;
@@ -41,10 +44,13 @@ void Controller::clearAll(){
 }
 
 
+/// @brief checks if robot can be placed onto the location, if yes, then it pushes him into vector of robots
+/// @param x location on x axis 
+/// @param y location on y axis
+/// @return true if it was succesful, false if not
 bool Controller::addRobot(int x, int y){
-    //this might need some changes
     QRect new_robot_rect(x, y, ROBOT_HITBOX, ROBOT_HITBOX); 
-
+    //checks if there is any robot that could intersect
     for (Robot* robot : robots) {
         QRect existing_robot_rect(robot->getPosX(), robot->getPosY(), ROBOT_HITBOX, ROBOT_HITBOX); 
 
@@ -52,7 +58,7 @@ bool Controller::addRobot(int x, int y){
             return false;
         }
     }
-
+    //checks if there is any box that could intersect 
     for (Box* box : boxes) {
         if (box != nullptr) {
             QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_HITBOX, BOX_HITBOX); 
@@ -68,17 +74,18 @@ bool Controller::addRobot(int x, int y){
     return true;
 }
 
+/// @brief starts simulation by unpausing the timer
 void Controller::startSimulation(){
-    timer->start(10);
-    for (Robot* robot : robots) {
-        robot->simulate(&scene);
-    }
+    timer->start(TICKRATE);
 }
 
+/// @brief stops simulation by pausing the timer
 void Controller::stopSimulation(){
     timer->stop();
 }
 
+/// @brief Adds robot from string (file) into vector of robots
+/// @param input 
 void Controller::addRobot(std::string input)
 {
     std::vector<std::string> command;
@@ -112,6 +119,7 @@ void Controller::addRobot(std::string input)
 
 
 
+/// @brief simulates all robots except for the one controlled by user
 void Controller::simulateAll() {
     for (Robot* robot : robots) {
         if(this->selected_robot != robot)
@@ -123,21 +131,24 @@ void Controller::simulateAll() {
             robot->playerControl(&scene);
         }
     }
-    // robots.back()->simulate(&scene);
 }
 
+/// @brief spawns robot on top of the queue
 void Controller::spawnTopmostRobot(){
     robots.back()->spawn(&scene);
 }
 
-
+/// @brief spawns all robots
 void Controller::spawnRobots(){
      for (Robot* robot : robots) {
         robot->spawn(&scene);
     }
-    // robots.clear();
 }
 
+/// @brief adds box into vector of boxes if it is possible
+/// @param x x axis location
+/// @param y y axis location 
+/// @return true if it was succesful, false if not
 bool Controller::addBox(int x, int y){
     //this might need some changes
       QRect new_box_rect(x, y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
@@ -163,6 +174,9 @@ bool Controller::addBox(int x, int y){
     return true;
 }
 
+
+/// @brief adds box from string (file) into vector of boxes if possible
+/// @param input 
 void Controller::addBox(std::string input)
 {
     std::vector<std::string> command;
@@ -190,10 +204,15 @@ void Controller::addBox(std::string input)
     boxes.push_back(new Box(box_x, box_y));
 }
 
+/// @brief spawns box from top of the vector
 void Controller::spawnTopmostBox(){
     boxes.back()->spawn(&scene);
 }
 
+
+/// @brief removes item from position set by x and y
+/// @param x x axis position
+/// @param y y axis position
 void Controller::removeItem(int x, int y)
 {
     //Remove box
@@ -223,6 +242,10 @@ void Controller::removeItem(int x, int y)
     }
 }
 
+
+/// @brief Saves map into file
+/// @param map_name name of the file it will create and be save data into 
+/// @return 
 int Controller::saveMap(std::string map_name)
 {
     if(map_name.size() == 0)return 1;
@@ -255,7 +278,9 @@ int Controller::saveMap(std::string map_name)
 
     return 0;
 }
-
+/// @brief Loads map from file
+/// @param file_path path of the file it should load map from
+/// @return 
 int Controller::loadMap(std::string file_path)
 {
     //clear map
@@ -311,7 +336,9 @@ int Controller::loadMap(std::string file_path)
     this->selected_robot = nullptr;
     return 0;
 }
-
+/// @brief gets object from file
+/// @param file 
+/// @return string with object data
 std::string Controller::getFileObject(std::ifstream &file)
 {
     std::string out = "";
@@ -328,6 +355,10 @@ std::string Controller::getFileObject(std::ifstream &file)
     return out;
 }
 
+/// @brief counts characters in input
+/// @param input 
+/// @param chr 
+/// @return 
 int Controller::countChars(std::string input, char chr)
 {
     int cnt = 0;
@@ -338,6 +369,10 @@ int Controller::countChars(std::string input, char chr)
     return cnt;
 }
 
+/// @brief selects robot on position x and y
+/// @param x position on x axis
+/// @param y position on y axis
+/// @return 
 int Controller::selectRobot(int x, int y)
 {
     //check if clicked on robot 
@@ -373,6 +408,7 @@ int Controller::selectRobot(int x, int y)
 
 }
 
+/// @brief unselects robot
 void Controller::unselectRobot()
 {
     if(this->selected_robot != nullptr)

@@ -1,6 +1,8 @@
 #include "CustomGraphicsView.hpp"
 
 
+/// @brief records mouse click events, saves them into last_click_pos attribute
+/// @param event 
 void CustomGraphicsView::mousePressEvent(QMouseEvent *event)
 {
 
@@ -17,7 +19,8 @@ void CustomGraphicsView::mousePressEvent(QMouseEvent *event)
     }
 
 }
-
+/// @brief resizes the view to fit the scene
+/// @param event 
 void CustomGraphicsView::resizeEvent(QResizeEvent *event)
 {
     fitInView(sceneRect(), Qt::KeepAspectRatio);
