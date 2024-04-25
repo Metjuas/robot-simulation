@@ -12,6 +12,6 @@ public:
     Map(Controller* controller, QWidget *parent = nullptr);
     
 private:
-    QWidget *m_parent;
-    Controller* m_controller;
+    QWidget *parent;
+    Controller* controller;
 };
