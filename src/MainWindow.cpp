@@ -4,7 +4,11 @@
 /// @brief Creates the main window of the application, adds widgets to it and connects signals and slots
 /// @param parent 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    setWindowTitle("Main window");
+    setWindowTitle("Robots");
+
+    //set icon
+    setWindowIcon(QIcon(":assets/RobotAlly.png"));
+
     controller = std::make_unique<Controller>();
 
     QStackedWidget *stacked_widget = new QStackedWidget(this);
@@ -17,7 +21,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     stacked_widget->addWidget(page_create.get());
     setCentralWidget(stacked_widget);
 
-    connect(stacked_widget, &QStackedWidget::currentChanged, [=](int) {
+    //set style
+    setStyleSheet(
+    "QPushButton:hover:!pressed{border: 2px solid black;font-size: 20px;background-color:rgb(236,233,216);}"
+    "QLineEdit:hover,QLineEdit:focus{border: 2px solid black;}"
+    "QSpinBox:hover,QSpinBox:focus{border: 2px solid black;}"
+    "QComboBox:hover{border: 2px solid black;}"
+    "QGraphicsView{border: 4px solid black;}"
+    "QLabel{font-size: 28px;}"
+    );
+
+    QPixmap bkgnd(":/assets/main_background.png");
+    bkgnd = bkgnd.scaled(300,500, Qt::KeepAspectRatio);
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    connect(stacked_widget, &QStackedWidget::currentChanged, [=](int index) {
+        if(index == 0)
+        {
+            this->setPalette(palette);
+        }
+        else
+        {
+            QPalette color_palette;
+            color_palette.setColor(QPalette::Window, QColor(214, 218, 200));
+            this->setPalette(color_palette);
+        }
         adjustSize();
     });
 

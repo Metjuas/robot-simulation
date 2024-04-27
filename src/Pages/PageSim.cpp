@@ -113,7 +113,7 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
 
     this->setLayout(v_layout);
     view->setMode(CustomGraphicsView::RecordClicks);
-
+    robotSelectGUI(false);
 }
 
 /// @brief showEvent for simulation page, handles 

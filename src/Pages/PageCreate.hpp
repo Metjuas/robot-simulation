@@ -61,6 +61,7 @@ class PageCreate : public QWidget
         cursor_state current_cursor_state;
 
         //Robot setup widgets
+        QLabel *setup_label;
         QLineEdit *robot_name;
         QSpinBox *direction_num;
         QSpinBox *distance_num;

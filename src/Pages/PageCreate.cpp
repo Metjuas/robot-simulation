@@ -53,9 +53,16 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
     trash_button->setCheckable(true);
 
     QLineEdit *map_name = new QLineEdit;
+    map_name->setPlaceholderText("map name");
     QPushButton *ok_button = new QPushButton("Ok", this);
     QPushButton *save_button = new QPushButton("Save", this);
 
+
+    setup_label = new QLabel();
+    setup_label->setText("Robot setup");
+    setup_label->setIndent(5);
+    setup_label->setMargin(5);
+    setup_label->setFixedHeight(35);
     robot_name = new QLineEdit;
     direction_num = new QSpinBox();
     direction_num->setPrefix("Direction:");
@@ -84,12 +91,14 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
     tool_bar_layout->addWidget(save_button);
 
     data_set_layout = new QVBoxLayout();
+    data_set_layout->setAlignment(Qt::AlignCenter);
+    data_set_layout->addWidget(setup_label);
     data_set_layout->addWidget(robot_name);
     data_set_layout->addWidget(direction_num);
     data_set_layout->addWidget(distance_num);
     data_set_layout->addWidget(rotation_num);
-
     data_set_layout->addWidget(direction_type);
+
 
 
     main_layout = new QGridLayout();

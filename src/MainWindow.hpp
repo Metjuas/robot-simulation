@@ -8,6 +8,8 @@
 #include <QObject> 
 #include <QStackedWidget>
 #include <memory>
+#include <QPixmap>
+#include <QPalette>
 
 #include "./Pages/PageCreate.hpp"
 
@@ -21,6 +23,7 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
 private:
+    QPalette palette;
     std::unique_ptr<PageMenu> page_menu = nullptr;
     std::unique_ptr<PageCreate> page_create = nullptr;
     std::unique_ptr<PageSim> page_sim = nullptr;

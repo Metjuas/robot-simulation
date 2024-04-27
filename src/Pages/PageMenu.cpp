@@ -8,13 +8,15 @@
 /// @param controller controller for passing data
 PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *controller) : QWidget(parent), controller(controller) {
     this->controller = controller;
-    //parent->resize(300, 500);
     this->setFixedSize(300,500);
 
     //create widgets
     QPushButton *create_button = new QPushButton("create map", this);
     QPushButton *select_button = new QPushButton("select map from file", this);
     QPushButton *start_button = new QPushButton("START", this);
+    start_button->setObjectName("start_button");
+    start_button->setStyleSheet("QPushButton{font-size:30px;}"
+    "QPushButton:hover{font-size:34px;}");
     start_button->setFixedHeight(50);
 
     //add widgets and set layouts    
