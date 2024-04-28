@@ -70,8 +70,9 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
     direction_num->setMaximum(360);
     distance_num = new QSpinBox();
     distance_num->setPrefix("Distance:");
+    distance_num->setMinimum(30);
+    distance_num->setMaximum(1000);
     direction_type = new QComboBox();
-
     rotation_num = new QSpinBox();
     rotation_num->setPrefix("Rotation angle: ");
     rotation_num->setMinimum(0);
@@ -216,6 +217,7 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
             controller->getSelectedRobot()->setDistance(value);
         }
     });
+
     connect(rotation_num, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int value) {
         if(controller->getSelectedRobot() != nullptr)
         {
@@ -223,7 +225,6 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
         }
     });
     
-
     connect(direction_type, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index) {
         if(controller->getSelectedRobot() != nullptr)
         {
@@ -240,7 +241,6 @@ PageCreate::PageCreate(QStackedWidget *stacked_widget, QWidget *parent, Controll
 /// @param x x axis position of entity spawn
 /// @param y y axis position of entity spawn
 void PageCreate::handleMouseClick(int x, int y){
-    std::cout << "Mouse click at: " << x << ", " << y << std::endl;
      if(current_cursor_state == cursor_state::SPAWN_ROBOT){
         //robot size
 
@@ -335,12 +335,12 @@ void PageCreate::startRecordingClicks()
 void PageCreate::stopRecordingClicks()
 {
     view->viewport()->setCursor(Qt::ArrowCursor);
-    //view->setMode(CustomGraphicsView::Normal);
 }
 
 /// @brief event when swapping to PageCreate - handles popup and resizing
 /// @param event 
 void PageCreate::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
     if (stacked_widget->currentIndex() == stacked_widget->indexOf(this)) {
         
         QDialog dialog(this);
@@ -349,12 +349,12 @@ void PageCreate::showEvent(QShowEvent *event) {
         
         //dialog windows
         QSpinBox *spin_box_1 = new QSpinBox(&dialog);
-        spin_box_1->setRange(0, 1000);
+        spin_box_1->setRange(250, 1600);
         spin_box_1->setValue(600);
         form.addRow("Height:", spin_box_1);
 
         QSpinBox *spin_box_2 = new QSpinBox(&dialog);
-        spin_box_2->setRange(0, 1000);
+        spin_box_2->setRange(250, 1000);
         spin_box_2->setValue(600);
         form.addRow("Width:", spin_box_2);
 
@@ -383,8 +383,6 @@ void PageCreate::showEvent(QShowEvent *event) {
             stacked_widget->setCurrentIndex(0);
         }
     }
-
-    QWidget::showEvent(event);
 
     //add widgets to page
     main_layout->addLayout(tool_bar_layout, 1, 0,  Qt::AlignBottom);

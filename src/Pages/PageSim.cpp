@@ -76,7 +76,6 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
         }
     });
 
-
     //right button event
     connect(right_button, &QPushButton::pressed, [=]() {
         if(controller->getSelectedRobot() != nullptr)
@@ -91,13 +90,9 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
         }
     });
 
-
     //setLayout
     grid_layout = new QGridLayout();
     grid_layout->columnMinimumWidth(10);
-    //grid_layout->maximumSize().setWidth(10);
-
-
     grid_layout->addWidget(pause_button, 0, 0, 2, 2);
     grid_layout->addWidget(menu_button, 0, 10, 2, 2);
     grid_layout->addWidget(go_button, 0, 4, 1, 2);
@@ -105,11 +100,6 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
     grid_layout->addWidget(right_button, 1, 5);
 
     v_layout = new QVBoxLayout();
-
-
-    
-
-    
 
     this->setLayout(v_layout);
     view->setMode(CustomGraphicsView::RecordClicks);
@@ -178,5 +168,4 @@ void PageSim::handleMouseClick(int x, int y){
     {
         robotSelectGUI(false);
     }
-
 }

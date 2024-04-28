@@ -17,7 +17,11 @@ class PageMenu : public QWidget
     Q_OBJECT;
     public:
         PageMenu(QStackedWidget *stacked_widget, QWidget *parent = nullptr, Controller *controller = nullptr);
+    protected:
+        void showEvent(QShowEvent *event) override;
     private:
         QStackedWidget *stacked_widget;
         Controller *controller;
+        QPushButton *create_button;
+        QPushButton *start_button;
 };

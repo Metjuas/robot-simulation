@@ -11,13 +11,14 @@ PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *
     this->setFixedSize(300,500);
 
     //create widgets
-    QPushButton *create_button = new QPushButton("create map", this);
+    create_button = new QPushButton("create map", this);
     QPushButton *select_button = new QPushButton("select map from file", this);
-    QPushButton *start_button = new QPushButton("START", this);
+    start_button = new QPushButton("START", this);
     start_button->setObjectName("start_button");
     start_button->setStyleSheet("QPushButton{font-size:30px;}"
     "QPushButton:hover{font-size:34px;}");
     start_button->setFixedHeight(50);
+    start_button->setEnabled(false);
 
     //add widgets and set layouts    
     QGridLayout *main_layout = new QGridLayout();
@@ -31,8 +32,9 @@ PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *
 
     //button events
     connect(create_button, &QPushButton::clicked, [=]() {
-        
         stacked_widget->setCurrentIndex(2);
+        create_button->setText("edit");
+        start_button->setEnabled(true);
     });
 
     connect(select_button, &QPushButton::clicked, [=]() {
@@ -60,9 +62,11 @@ PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *
             message_box.setText("Invlid file format.");
             message_box.exec();
         }
-
-
-        
+        else
+        {
+            create_button->setText("edit");
+            start_button->setEnabled(true);
+        }
     }
     });
 
@@ -80,4 +84,15 @@ PageMenu::PageMenu(QStackedWidget *stacked_widget, QWidget *parent, Controller *
         parent->resize(this->controller->map_width,this->controller->map_height);
         stacked_widget->setCurrentIndex(1);
     });
+}
+
+/// @brief event when swapping to PageMenu
+/// @param event 
+void PageMenu::showEvent(QShowEvent *event){
+    QWidget::showEvent(event);
+    if(this->controller->map_width == 0 || this->controller->map_height == 0)
+    {
+        create_button->setText("create");
+        start_button->setEnabled(false);
+    }
 }

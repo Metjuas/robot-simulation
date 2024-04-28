@@ -132,7 +132,6 @@ void Robot::move()
 
         double new_x = sprite->x() + cos(rotation);
         double new_y = sprite->y() + sin(rotation);
-        // std::cout << "x: " << (int)new_x << " y: " << (int)new_y << "\n";
         this->pos_x = (int)new_x;
         this->pos_y = (int)new_y;
 

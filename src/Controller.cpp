@@ -151,7 +151,7 @@ void Controller::spawnRobots(){
 /// @return true if it was succesful, false if not
 bool Controller::addBox(int x, int y){
     //this might need some changes
-      QRect new_box_rect(x, y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
+    QRect new_box_rect(x, y, BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
 
     for (Box* box : boxes) {
         QRect existing_box_rect(box->getPosX(), box->getPosY(), BOX_SPRITE_HEIGHT, BOX_SPRITE_WIDTH); 
