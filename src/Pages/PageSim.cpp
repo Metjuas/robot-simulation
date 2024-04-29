@@ -113,6 +113,7 @@ void PageSim::showEvent(QShowEvent *event) {
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Start the simulation
     controller->startSimulation();
+    controller->setSimulated(true);
 
     v_layout->addWidget(view);
     v_layout->addLayout(grid_layout);
@@ -157,7 +158,7 @@ void PageSim::robotSelectGUI(bool toggle)
 /// @param x position on x axis
 /// @param y position on y axis
 void PageSim::handleMouseClick(int x, int y){
-    int ret = controller->selectRobot(x-ROBOT_SPRITE_OFFSET,y-ROBOT_SPRITE_OFFSET);
+    int ret = controller->selectRobot(x - ROBOT_SPRITE_OFFSET,y - ROBOT_SPRITE_OFFSET);
     if(ret == 1)
     {
         robotSelectGUI(true);

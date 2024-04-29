@@ -33,6 +33,8 @@ class Controller : public QObject{
         int saveMap(std::string map_name);
         int loadMap(std::string filePath);
         Robot *getSelectedRobot() { return this->selected_robot; }
+        bool getSimulated() {return this->simulated; }
+        void setSimulated(bool sim) {this->simulated = sim; }
 
         int selectRobot(int x, int y);
         void unselectRobot();
@@ -48,5 +50,6 @@ class Controller : public QObject{
         std::vector<Robot*> robots;
         std::vector<Box*> boxes;
         Robot *selected_robot;
+        bool simulated;
 };
 

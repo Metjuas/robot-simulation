@@ -267,7 +267,16 @@ void PageCreate::handleMouseClick(int x, int y){
     }
     else
     {
-        int ret = controller->selectRobot(x,y);
+        int ret;
+        if(controller->getSimulated())
+        {
+            ret = controller->selectRobot(x-32,y-32);
+        }
+        else
+        {
+            ret = controller->selectRobot(x,y);
+        }
+
         if(ret == 1)
         {
             robotSelectGUI(true);

@@ -149,8 +149,8 @@ void Robot::move()
 
         double new_x = sprite->x() + cos(rotation);
         double new_y = sprite->y() + sin(rotation);
-        this->pos_x += (int)new_x;
-        this->pos_y += (int)new_y;
+        this->pos_x = (int)new_x;
+        this->pos_y = (int)new_y;
 
         sprite->setPos(new_x, new_y);
     }
@@ -196,7 +196,7 @@ std::string Robot::getSaveString()
                       std::to_string(this->pos_y) + "," +
                       std::to_string(this->distance) + "," +
                       std::to_string(this->rotation_angle) + "," +
-                      robotDirection + + "," +
+                      robotDirection + "," +
                       std::to_string(this->robot_rotation) + ")";
     return out;
 }

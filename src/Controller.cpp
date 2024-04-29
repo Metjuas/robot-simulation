@@ -19,6 +19,7 @@ Controller::Controller() {
     this->map_height = 0;
     this->map_width = 0;
     this->selected_robot = nullptr;
+    this->simulated = false;
 }
 
 Controller::~Controller() {
