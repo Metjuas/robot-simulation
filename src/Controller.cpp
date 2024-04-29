@@ -102,6 +102,7 @@ void Controller::addRobot(std::string input)
     int robot_distance = std::stoi(command[3]);
     int robot_rotation = std::stoi(command[4]);
     RotationDirection robot_direction = strcmp(command[5].c_str(),"LEFT")? LEFT : RIGHT;
+    int robot_rot_num = std::stoi(command[6]);
 
     //this might need some changes
     QRect new_robot_rect(robot_x, robot_y, ROBOT_HITBOX, ROBOT_HITBOX); 
@@ -114,7 +115,7 @@ void Controller::addRobot(std::string input)
         }
     }
     // The new robot does not overlap with any existing robots, so add it
-    this->robots.push_back(new Robot(robot_name, robot_x, robot_y, robot_rotation, robot_distance, robot_direction));
+    this->robots.push_back(new Robot(robot_name, robot_x, robot_y, robot_rotation, robot_distance, robot_direction, robot_rot_num));
 }
 
 
@@ -308,13 +309,15 @@ int Controller::loadMap(std::string file_path)
     this->map_width = std::stoi(command[0]);
     this->map_height = std::stoi(command[1]);
     if(map_file.get() != '\n')return 2;
+    this->scene.clear();
+    this->scene.setSceneRect(0, 0, this->map_width, this->map_height);
 
     //get robots
     while(map_file.peek() != '\n')
     {
         item = getFileObject(map_file);
         if(strcmp(item.c_str(), "") == 0)return 2;
-        if(countChars(item, ',') != 5)return 2;
+        if(countChars(item, ',') != 6)return 2;
 
         addRobot(item);
         spawnTopmostRobot();

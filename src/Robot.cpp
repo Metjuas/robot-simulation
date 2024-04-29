@@ -25,7 +25,7 @@ Robot::Robot(int pos_x, int pos_y)
     this->player_right = false;
 }
 
-Robot::Robot(std::string name, int pos_x, int pos_y, int rotation, int distance, RotationDirection direction)
+Robot::Robot(std::string name, int pos_x, int pos_y, int rotation, int distance, RotationDirection direction, int robot_rotation)
 {
     this->pos_x = pos_x;
     this->pos_y = pos_y;
@@ -33,6 +33,7 @@ Robot::Robot(std::string name, int pos_x, int pos_y, int rotation, int distance,
     this->rotation_angle = rotation;
     this->distance = distance;
     this->direction = direction;
+    this->robot_rotation = robot_rotation;
 }
 
 Robot::~Robot()
@@ -116,6 +117,9 @@ void Robot::spawn(QGraphicsScene *scene)
     sprite->setTransformOriginPoint(sprite->boundingRect().width() / 2.0, sprite->boundingRect().height() / 2.0);
 
     scene->addItem(sprite);
+        
+    this->setSpriteRotation();
+    this->setSpriteRotation();
 }
 
 void Robot::despawn(QGraphicsScene *scene)
@@ -175,7 +179,8 @@ std::string Robot::getSaveString()
                       std::to_string(this->pos_y) + "," +
                       std::to_string(this->distance) + "," +
                       std::to_string(this->rotation_angle) + "," +
-                      robotDirection + ")";
+                      robotDirection + + "," +
+                      std::to_string(this->robot_rotation) + ")";
     return out;
 }
 

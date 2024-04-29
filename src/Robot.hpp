@@ -18,7 +18,7 @@ class Robot: public QObject{
     Q_OBJECT;
     public:
         Robot(int pos_x, int pos_y);
-        Robot(std::string name, int pos_x, int pos_y, int rotation, int distance, RotationDirection direction);
+        Robot(std::string name, int pos_x, int pos_y, int rotation, int distance, RotationDirection direction, int robot_rotation);
         ~Robot();
         void spawn(QGraphicsScene* scene);
         void despawn(QGraphicsScene* scene);
