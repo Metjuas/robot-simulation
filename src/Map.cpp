@@ -7,6 +7,9 @@
 // constructor for the Map class, paints the background of the scene with a texture
 
 
+/// @brief creates map object, sets the background texture of the scene
+/// @param controller 
+/// @param parent 
 Map::Map(Controller* controller, QWidget *parent) : parent(parent), controller(controller) {
     QPixmap texture(":/assets/Iron.png");
     if (texture.isNull()) {

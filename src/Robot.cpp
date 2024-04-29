@@ -35,6 +35,7 @@ Robot::Robot(std::string name, int pos_x, int pos_y, int rotation, int distance,
     this->direction = direction;
 }
 
+/// @brief removes robot sprite
 Robot::~Robot()
 {
     // if the sprite exists, delete it
@@ -44,7 +45,8 @@ Robot::~Robot()
         delete sprite;
     }
 }
-
+/// @brief main simulation function for the robot. It checks for collisions and moves the robot accordingly
+/// @param scene 
 void Robot::simulate(QGraphicsScene *scene)
 {
     QList<QGraphicsItem *> items_in_front;
@@ -78,6 +80,7 @@ void Robot::simulate(QGraphicsScene *scene)
     }
 }
 
+/// @brief function for rotating the robot
 void Robot::rotate()
 {
     if (sprite && rotation_checker > 0)
@@ -104,6 +107,8 @@ void Robot::rotate()
     // Set the point of rotation to the center of the sprite
 }
 
+/// @brief function for spawning the robot sprite
+/// @param scene 
 void Robot::spawn(QGraphicsScene *scene)
 {
     // create a new sprite and add it to the scene
@@ -123,6 +128,7 @@ void Robot::despawn(QGraphicsScene *scene)
     scene->removeItem(sprite);
 }
 
+/// @brief moves the robot sprite
 void Robot::move()
 {
     if (sprite)
@@ -139,6 +145,9 @@ void Robot::move()
     }
 }
 
+/// @brief function for detecting collisions in front of the robot and on robot
+/// @param scene 
+/// @return tuple of QList<QGraphicsItem *>, QList<QGraphicsItem *>, bool - items in front of the robot, items on the robot, out of bounds
 std::tuple<QList<QGraphicsItem *>, QList<QGraphicsItem *>, bool> Robot::detectCollision(QGraphicsScene *scene)
 {
     qreal radius = sprite->boundingRect().width() / 2.0;
@@ -165,6 +174,8 @@ std::tuple<QList<QGraphicsItem *>, QList<QGraphicsItem *>, bool> Robot::detectCo
     return std::make_tuple(items_in_front, items_on_robot, out_of_bounds);
 }
 
+/// @brief saves the robot to a string
+/// @return 
 std::string Robot::getSaveString()
 {
     std::string robotDirection = this->direction == LEFT ? "LEFT" : "RIGHT";
@@ -179,6 +190,7 @@ std::string Robot::getSaveString()
     return out;
 }
 
+/// @brief selects the robot
 void Robot::select()
 {
     if (this->sprite != nullptr)
@@ -187,6 +199,7 @@ void Robot::select()
     }
 }
 
+/// @brief unselects the robot
 void Robot::unselect()
 {
     if (this->sprite != nullptr)
@@ -195,6 +208,7 @@ void Robot::unselect()
     }
 }
 
+/// @brief set the robot sprite
 void Robot::setSpriteRotation()
 {
     if (direction == LEFT)
@@ -207,6 +221,8 @@ void Robot::setSpriteRotation()
     }
 }
 
+/// @brief player control function for the robot
+/// @param scene 
 void Robot::playerControl(QGraphicsScene *scene)
 {
     if (this->player_left)
