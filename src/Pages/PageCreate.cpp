@@ -358,15 +358,22 @@ void PageCreate::showEvent(QShowEvent *event) {
         spin_box_2->setValue(600);
         form.addRow("Width:", spin_box_2);
 
-        QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+        if(!(controller->map_height == 0 || controller->map_width ==0))
+        {
+            spin_box_1->setRange(controller->map_height, 900);
+            spin_box_1->setValue(controller->map_height);
+            spin_box_2->setRange(controller->map_width, 1500);
+            spin_box_2->setValue(controller->map_width);
+        }
+
+        QDialogButtonBox buttonBox(QDialogButtonBox::Ok,
                                    Qt::Horizontal, &dialog);
         form.addRow(&buttonBox);
         //button function call
         connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-        connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
         // if the user accepts the dialog, it goes to the next page
-       if (dialog.exec() == QDialog::Accepted) {
+        if (dialog.exec() == QDialog::Accepted) {
             if(controller){
                 controller->map_height = spin_box_1->value();
                 controller->map_width = spin_box_2->value();
@@ -377,10 +384,6 @@ void PageCreate::showEvent(QShowEvent *event) {
                     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                 }
             }
-        }
-        // in case the user cancels the dialog, it goes back to the main page
-        else {
-            stacked_widget->setCurrentIndex(0);
         }
     }
 
