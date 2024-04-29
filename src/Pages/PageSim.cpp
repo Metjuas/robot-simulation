@@ -20,11 +20,9 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
     go_button->setCheckable(true);
     left_button = new QPushButton("<-", this);
     right_button = new QPushButton("->", this);
-    //button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     //pause button Click
     connect(menu_button, &QPushButton::clicked, [=]() {
-        controller->clearAll();
         stacked_widget->setCurrentIndex(0);
     });
 
@@ -124,6 +122,7 @@ void PageSim::showEvent(QShowEvent *event) {
 void PageSim::hideEvent(QHideEvent *event) {
     QWidget::hideEvent(event);
 
+    controller->stopSimulation();
     v_layout->removeWidget(view);
     v_layout->removeItem(grid_layout);
 }

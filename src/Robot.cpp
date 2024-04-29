@@ -34,6 +34,13 @@ Robot::Robot(std::string name, int pos_x, int pos_y, int rotation, int distance,
     this->distance = distance;
     this->direction = direction;
     this->robot_rotation = robot_rotation;
+    this->sprite = nullptr;
+    this->is_rotating = false;
+    this->rotation_checker = 0;
+    this->collision = false;
+    this->player_go = false;
+    this->player_left = false;
+    this->player_right = false;
 }
 
 Robot::~Robot()
@@ -136,8 +143,8 @@ void Robot::move()
 
         double new_x = sprite->x() + cos(rotation);
         double new_y = sprite->y() + sin(rotation);
-        this->pos_x = (int)new_x;
-        this->pos_y = (int)new_y;
+        this->pos_x += (int)new_x;
+        this->pos_y += (int)new_y;
 
         sprite->setPos(new_x, new_y);
     }
@@ -164,7 +171,6 @@ std::tuple<QList<QGraphicsItem *>, QList<QGraphicsItem *>, bool> Robot::detectCo
     {
         out_of_bounds = true;
     }
-    // items_on_robot.removeAll(sprite);
 
     return std::make_tuple(items_in_front, items_on_robot, out_of_bounds);
 }
