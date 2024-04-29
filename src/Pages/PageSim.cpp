@@ -24,7 +24,6 @@ PageSim::PageSim(QStackedWidget *stacked_widget, QWidget *parent, Controller *co
 
     //pause button Click
     connect(menu_button, &QPushButton::clicked, [=]() {
-        parent->resize(300,500);
         controller->clearAll();
         stacked_widget->setCurrentIndex(0);
     });

@@ -358,6 +358,14 @@ void PageCreate::showEvent(QShowEvent *event) {
         spin_box_2->setValue(600);
         form.addRow("Width:", spin_box_2);
 
+        if(!(controller->map_height == 0 || controller->map_width ==0))
+        {
+            spin_box_1->setRange(controller->map_height, 900);
+            spin_box_1->setValue(controller->map_height);
+            spin_box_2->setRange(controller->map_width, 1500);
+            spin_box_2->setValue(controller->map_width);
+        }
+
         QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
                                    Qt::Horizontal, &dialog);
         form.addRow(&buttonBox);
