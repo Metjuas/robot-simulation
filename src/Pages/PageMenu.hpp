@@ -1,3 +1,8 @@
+// Řešení ICP, 2.5.2024
+// Autor: Matej Olexa xolexa03, Dominik Sajko xsajko01, FIT
+// Přeloženo: g++ 11.4.0
+
+
 #pragma once
 
 #include <QWidget>
