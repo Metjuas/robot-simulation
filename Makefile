@@ -11,7 +11,7 @@ run: clean build
 	./robots
 
 clean:
-	rm -rf build doc xolexa03-xsajko01.zip build-* robots
+	rm -rf build doc/html xolexa03-xsajko01.zip build-* robots
 
 doxygen:
 	doxygen Doxyfile
