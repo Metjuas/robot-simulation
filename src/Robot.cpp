@@ -115,6 +115,7 @@ void Robot::rotate()
                 is_rotating = false;
             }
         }
+        this->rotation_angle = (this->rotation_angle + 1) % 360;
     }
     // Set the point of rotation to the center of the sprite
 }
