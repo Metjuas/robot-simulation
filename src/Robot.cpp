@@ -100,6 +100,7 @@ void Robot::rotate()
         if (direction == RIGHT)
         {
             sprite->setRotation(sprite->rotation() + 1);
+            this->rotation_angle = (this->rotation_angle + 1) % 360;
             rotation_checker--;
             if (rotation_checker == 0)
             {
@@ -110,6 +111,7 @@ void Robot::rotate()
         {
             sprite->setRotation(sprite->rotation() - 1);
             rotation_checker--;
+            (this->rotation_angle - 1 < 0)?this->rotation_angle = 359: this->rotation_angle-=1; 
             if (rotation_checker == 0)
             {
                 is_rotating = false;
